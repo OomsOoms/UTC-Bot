@@ -1,11 +1,18 @@
 import pandas as pd
-from nextcord.ui.view import View
-from nextcord import SlashOption, SelectOption
+from nextcord import SelectOption, SlashOption
 from nextcord.ui import Select
+from nextcord.ui.view import View
 
-def append_csv(event_data):
-    new_data = pd.DataFrame(event_data) # Writing new results to CSV file
-    new_data.to_csv("events_data.csv", mode='a', index=False, header=False)
+
+async def update_message(message, options):
+    # Create the dropdown and add it to a View
+    dropdown = Select(placeholder="Select an option", options=options)
+    view = View()
+    view.add_item(dropdown)
+
+    # Edit the message with the new content and view
+    await message.edit(content="Please select an event:", view=view)
+
 
 def init_create_thread(bot):
     @bot.slash_command(name="create_thread", description="Creates a private thread for the user who clicks the button in the dropdown")
@@ -38,17 +45,25 @@ def init_create_thread(bot):
                     await thread.send(f"Welcome {ctx.user.mention}! This is your private thread for {selected_option}.")
 
                 self.dropdown = Select(placeholder="Select an option", options=options)
-                self.dropdown.callback = dropdown_callback
+                self.dropdown.callback = dropdown_callback # type: ignore
+        
+
+        #ctx.response.defer()
+
+        # Send the message and get the sent message object
+        message = await ctx.send("Please select an event:")
+
+        print(message.id)
+
+        # Write the guild ID, channel ID, and message ID to the file
+        with open('message_ids.txt', 'a') as file:
+            file.write(f"{ctx.guild.id},{ctx.channel.id},{message.id}\n")
+            print(message.id)
 
         view = View()
         view.add_item(CreateButton(options).dropdown)
 
-        # Send the message and get the sent message object
-        msg = await ctx.send("Please select an event:", view=view)
-        msg = await ctx.send("hello")
+        # Update the message with the dropdown
+        await update_message(message, options)
 
-
-        # Write the guild ID, channel ID, and message ID to the file
-        with open('message_ids.txt', 'a') as file:
-            file.write(f"{ctx.guild.id},{ctx.channel.id},{msg.id}\n")
 
