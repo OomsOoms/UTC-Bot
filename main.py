@@ -6,54 +6,34 @@ from nextcord import SelectOption, SlashOption
 from nextcord.ext import commands
 
 from cmds import init_cmds
-from cmds.create_thread import update_message
+from cmds.create_thread import update_dropdown
+from cmds.fix_interactions import fix_interactions
 
 intents = nextcord.Intents.all()
 intents.members = True
-bot = commands.Bot(command_prefix='!', intents=intents)
+bot = nextcord.Client(intents=nextcord.Intents.all())
 
-async def fix_interactions():
-    try:
-        with open('message_ids.txt', 'r') as file:
-            lines = file.read().splitlines()
-    except FileNotFoundError:
-        print("File not found: message_ids.txt")
-        return
-
-    for line in lines:
-        try:
-            guild_id, channel_id, message_id = line.split(',')
-            guild = bot.get_guild(int(guild_id))
-            if guild is None:
-                print(f"Failed to get guild {guild_id}")
-                continue
-            channel = guild.get_channel(int(channel_id))
-            if channel is None:
-                print(f"Failed to get channel {channel_id} in guild {guild.name}")
-                continue
-            message = await channel.fetch_message(int(message_id))
-            events_data_list = pd.read_csv("events_data.csv").to_dict("list")
-            options = [SelectOption(label=event, value=event) for event in events_data_list["event_name"]]
-            await update_message(message, options)
-        except (nextcord.NotFound, nextcord.Forbidden, ValueError):
-            print(f"Failed to fix interaction for line: {line}")
-
-
-
-
-
+# Define an event listener for when the bot is ready
 @bot.event
 async def on_ready():
+    # Set the bot's presence
     await bot.change_presence(activity=nextcord.Activity(type=5, name='a UTC competition'))
+    
+    # Print a message indicating that the bot is online
     print(f'Online: {datetime.now()}'[:27].replace('-', '/'))
 
-    # Call the function to fix the interactions
-    await fix_interactions()
+    # Call the function to fix the interactions for existing messages
+    await fix_interactions(bot, update_dropdown)
 
+# Define an event listener for when the bot joins a new guild
 @bot.event
 async def on_guild_join(guild):
     pass
 
+# Initialize the bot's commands using the init_cmds function from the cmds module
 init_cmds(bot)
 
-bot.run('OTgyNjEzMTY1MTk4MTU1ODg2.G0yARb.Fbifbsa7ErTA4v1dzeyxWzWGipzRwIEMfLCljk')
+
+
+# Start the bot by running its event loop with the specified token
+bot.run('')

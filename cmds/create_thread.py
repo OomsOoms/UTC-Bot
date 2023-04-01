@@ -1,69 +1,74 @@
 import pandas as pd
-from nextcord import SelectOption, SlashOption
+from nextcord import SelectOption
 from nextcord.ui import Select
 from nextcord.ui.view import View
+from nextcord import Embed
 
 
-async def update_message(message, options):
-    # Create the dropdown and add it to a View
-    dropdown = Select(placeholder="Select an option", options=options)
-    view = View()
-    view.add_item(dropdown)
+async def dropdown_callback(interaction):
+    # Stop interaction failed message
+    await interaction.response.defer()
 
-    # Edit the message with the new content and view
-    await message.edit(content="Please select an event:", view=view)
+    # Get the selected option
+    selected_option = interaction.data["values"][0]
+
+    # Create a new private thread
+    thread_name = f"Submit {selected_option}"
+    thread = await interaction.channel.create_thread(name=thread_name, auto_archive_duration=1440)
+
+    # Add the user who clicked the button to the thread
+    await thread.add_user(interaction.user)
+
+    # Send a message to the thread
+    await thread.send(f"Welcome {interaction.user.mention}! This is your private thread for submitting {selected_option} results!")
+
+async def update_dropdown(message):
+    events_data_list = pd.read_csv("events_data.csv").to_dict("list")
+    if len(events_data_list["event_name"]) > 0:
+        options = [SelectOption(label=event, value=event) for event in events_data_list["event_name"]]
+
+        dropdown = Select(placeholder="Select an option", options=options)
+        dropdown.callback = dropdown_callback
+
+        view = View()
+        view.add_item(dropdown)
+
+        # Edit the message with the new content and view
+        await message.edit(view=view)
+    else:
+        await message.edit(view=None)
 
 
 def init_create_thread(bot):
     @bot.slash_command(name="create_thread", description="Creates a private thread for the user who clicks the button in the dropdown")
     async def create_thread(ctx):
-        events_data_list = pd.read_csv("events_data.csv").to_dict("list")
-        options = [SelectOption(label=event, value=event) for event in events_data_list["event_name"]]
 
-        class CreateButton:
-            def __init__(self, options):
-                async def dropdown_callback(ctx):
-                    # Stop interaction failed message
-                    await ctx.response.defer()
-                    
-                    # Get the selected option
-                    selected_option = ctx.data["values"][0]
+        # Create an embed instance
+        embed = Embed(title="Cubing Competition Information", color=0xffa500)
 
-                    ## Check if the user has already competed in the event
-                    #if ctx.user.id in events_data_list["user_id"] and selected_option in events_data_list["event_name"]:
-                    #    await ctx.send(f"You have already competed in {selected_option}.")
-                    #    return
+        # Add description to the embed
+        embed.add_field(name="Event Selection", value="Select an event from the dropdown menu. Note that the events will change every day for each new round, so please check the dropdown menu regularly to see what events are available.")
 
-                    # Create a new private thread
-                    thread_name = f"{ctx.user.name}'s thread for {selected_option}"
-                    thread = await ctx.channel.create_thread(name=thread_name, auto_archive_duration=1440)
+        # Add submission information to the embed
+        embed.add_field(name="Solve Submission", value="To submit your solves, please go to the private channel named `submit [event name]`, which will appear once you select an event. The scrambles for each solve will be revealed after you submit your previous solve in the same channel.")
 
-                    # Add the user who clicked the button to the thread
-                    await thread.add_user(ctx.user)
+        # Add penalty information to the embed
+        embed.add_field(name="Penalties", value="If you need to add a penalty to a solve, you can do so by using the penalty buttons located under each scramble in the private channel.")
 
-                    # Send a message to the thread
-                    await thread.send(f"Welcome {ctx.user.mention}! This is your private thread for {selected_option}.")
+        # Add result information to the embed
+        embed.add_field(name="Results", value="Results will be available after each round.")
 
-                self.dropdown = Select(placeholder="Select an option", options=options)
-                self.dropdown.callback = dropdown_callback # type: ignore
-        
+        # Add good luck message to the embed
+        embed.add_field(name="Good Luck!", value="Have fun competing! If you have any questions, feel free to ask in the designated discussion channel.")
 
-        #ctx.response.defer()
+        # Send the embed to a channel or user
+        msg = await ctx.send(embed=embed)
 
-        # Send the message and get the sent message object
-        message = await ctx.send("Please select an event:")
+        # Update the message with the dropdown
+        await update_dropdown(msg)
 
-        print(message.id)
+        msg = await msg.fetch()
 
         # Write the guild ID, channel ID, and message ID to the file
         with open('message_ids.txt', 'a') as file:
-            file.write(f"{ctx.guild.id},{ctx.channel.id},{message.id}\n")
-            print(message.id)
-
-        view = View()
-        view.add_item(CreateButton(options).dropdown)
-
-        # Update the message with the dropdown
-        await update_message(message, options)
-
-
+            file.write(f"{ctx.guild.id},{ctx.channel.id},{msg.id}\n")

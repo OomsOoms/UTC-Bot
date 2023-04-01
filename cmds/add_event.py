@@ -1,6 +1,12 @@
 import nextcord
 from nextcord.ui.view import View
 import asyncio
+import csv
+
+#from ..main import fix_interactions
+from .create_thread import update_dropdown
+from .fix_interactions import fix_interactions
+
 
 def init_add_event(bot):
 
@@ -20,8 +26,8 @@ def init_add_event(bot):
 
         async def callback(self, interaction: nextcord.Interaction) -> None:
             # get event title and scrambles list from user input
-            desc = self.emTitle.value
-            scrambles = self.emScram.value.split(",")
+            desc = str(self.emTitle.value)
+            scrambles = str(self.emScram.value).split(",")
 
             # format the scrambles list in the description
             for i, x in enumerate(scrambles):
@@ -58,10 +64,15 @@ def init_add_event(bot):
 
             # edit the message with the view and buttons to show that the event was added
             message = interaction.message
-            await interaction.response.defer()
-            await message.edit(view=view)
+            
+            await message.edit(view=view) # type: ignore
 
-            # add the data to the events_data.csv file 
+            # write the new event data to the CSV file
+            with open("events_data.csv", "a", newline="") as csv_file:
+                writer = csv.writer(csv_file)
+                writer.writerow(["Place holder", "Place holder", "Place holder"])
+
+            await fix_interactions(bot, update_dropdown)
 
         async def cancel_callback(self, interaction: nextcord.Interaction) -> None:
             # create "Cancelling" and "Confirm" buttons, both disabled
@@ -76,11 +87,11 @@ def init_add_event(bot):
             # edit the message with the view and buttons to show that the cancellation was successful
             message = interaction.message
             await interaction.response.defer()
-            await message.edit(view=view)
+            await message.edit(view=view) # type: ignore
 
             # wait 2 seconds
             await asyncio.sleep(2)
-            await interaction.message.delete()
+            await interaction.message.delete() # type: ignore
     
     # register the slash command with the bot
     @bot.slash_command(name="add_event", description="Modal", guild_ids=[988085977719402536])
