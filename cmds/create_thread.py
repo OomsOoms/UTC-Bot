@@ -4,6 +4,8 @@ from nextcord.ui import Select
 from nextcord.ui.view import View
 from nextcord import Embed
 
+from .submit import submit
+
 
 async def dropdown_callback(interaction):
     # Stop interaction failed message
@@ -21,6 +23,8 @@ async def dropdown_callback(interaction):
 
     # Send a message to the thread
     await thread.send(f"Welcome {interaction.user.mention}! This is your private thread for submitting {selected_option} results!")
+
+    await submit(interaction, thread)
 
 async def update_dropdown(message):
     events_data_list = pd.read_csv("events_data.csv").to_dict("list")
@@ -64,11 +68,11 @@ def init_create_thread(bot):
         # Send the embed to a channel or user
         msg = await ctx.send(embed=embed)
 
+        msg = await msg.fetch()
+
         # Update the message with the dropdown
         await update_dropdown(msg)
 
-        msg = await msg.fetch()
-
         # Write the guild ID, channel ID, and message ID to the file
         with open('message_ids.txt', 'a') as file:
-            file.write(f"{ctx.guild.id},{ctx.channel.id},{msg.id}\n")
+            file.write(f"{ctx.guild.id},{ctx.channel.id},{msg.id},update_dropdown\n")

@@ -42,7 +42,6 @@ def init_add_event(bot):
 
             confirm_button = nextcord.ui.Button(label="Confirm", style=nextcord.ButtonStyle.green, custom_id="confirm_button", disabled=False)
             confirm_button.callback = self.confirm_callback
-            confirm_button.disabled = False
 
             # add buttons to a view
             view = View()
@@ -72,7 +71,7 @@ def init_add_event(bot):
                 writer = csv.writer(csv_file)
                 writer.writerow(["Place holder", "Place holder", "Place holder"])
 
-            await fix_interactions(bot, update_dropdown)
+            await fix_interactions(bot)
 
         async def cancel_callback(self, interaction: nextcord.Interaction) -> None:
             # create "Cancelling" and "Confirm" buttons, both disabled
