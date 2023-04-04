@@ -1,0 +1,20 @@
+event_id	name	format	average_id
+222	2x2x2 Cube	time	a
+333	3x3x3 Cube	time	a
+333bf	3x3x3 Blindfolded	time	3
+333fm	3x3x3 Fewest Moves	number	1
+333ft	3x3x3 With Feet	time	a
+333mbf	3x3x3 Multi-Blind	multi	1 
+333oh	3x3x3 One-Handed	time	a
+444	4x4x4 Cube	time	a
+444bf	4x4x4 Blindfolded	time	3
+555	5x5x5 Cube	time	a
+555bf	5x5x5 Blindfolded	time	3
+666	6x6x6 Cube	time	3
+777	7x7x7 Cube	time	3
+clock	Clock	time	a
+magic	Magic	time	a
+minx	Megaminx	time	a
+pyram	Pyraminx	time	a
+skewb	Skewb	time	a
+sq1	Square-1	time	a
