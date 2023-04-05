@@ -24,9 +24,4 @@ async def on_ready():
 init_cmds(bot)
 
 # Start the bot by running its event loop with the specified token
-bot.run('OTgyNjEzMTY1MTk4MTU1ODg2
-# dont take my key
-.G0yARb
-# i cant be bothered to make a new one every time i upload this
-.Fbifbsa7ErTA4v1dzeyxWzWGipzRwIEMfLCljk')
-# so i hide it from discord saftey jim
+bot.run('OTgyNjEzMTY1MTk4MTU1ODg2.G0yARb.Fbifbsa7ErTA4v1dzeyxWzWGipzRwIEMfLCljk')

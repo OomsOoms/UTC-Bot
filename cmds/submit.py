@@ -1,25 +1,31 @@
 from nextcord.ui.view import View
+import pandas as pd
 import nextcord
 import pickle
 import os
 
-    
-class UserSubmit:
 
+class UserSubmit:
     def __init__(self):
         self.scramble_links = {}
         self.thread_list = {}
+
+class ThreadObject:
+
+    def __init__(self, thread_id, event_id):
+        self.thread_id = thread_id
+        self.event_id = event_id
 
 
 # Define the name of the pickle file
 PICKLE_FILE_PATH = "data/user_submit.pickle"
 
-
 # Load the UserSubmit object from the pickle file
 try:
     with open(PICKLE_FILE_PATH, "rb") as f:
         user_submit = pickle.load(f)
-except EOFError:
+        
+except KeyboardInterrupt:
     # Handle the case where the file is empty or corrupted
     print(f"Error: {PICKLE_FILE_PATH} is empty or corrupted. Creating a new UserSubmit object.")
     user_submit = UserSubmit()
@@ -28,24 +34,20 @@ except EOFError:
         pickle.dump(user_submit, f)
 
 
-class ThreadObject:
-
-    def __init__(self, thread, event_id):
-        self.thread = thread
-        self.event_id = event_id
-
-
 def get_thread_object(thread, event_id):
     if (thread.id) in user_submit.thread_list:
-        #with open(PICKLE_FILE_PATH, "wb") as f: # cant save as it would cause the pickling to fail as you cant pickle an object with an object as an atribute
-        #    pickle.dump(user_submit, f)
-        return user_submit.thread_list[thread.id]
+        thread_object = user_submit.thread_list[thread.id]
     
     else:
-        # Create and store the object in the dictionary for faster access in future calls
-        thread_object = ThreadObject(thread, event_id)
+        # Create and store the object in the dictionary for faster access in future calls. cant be pickled if the thread object is passed though
+        thread_object = ThreadObject(thread.id, event_id)
         user_submit.thread_list[thread.id] = thread_object
-        return thread_object
+    
+    # Save the object in the pickle file so it is up to date
+    with open(PICKLE_FILE_PATH, "wb") as f:
+        pickle.dump(user_submit, f)
+
+    return thread_object
 
 
 async def send_image(thread_object):
@@ -73,7 +75,7 @@ async def submit(thread, event_id=None):
     thread_object = get_thread_object(thread, event_id)
 
     #await send_image(thread_object) # not going to test this until there is images
-    msg = await thread.send(thread_object)
+    msg = await thread.send(thread_object.thread_id)
 
     await update_button(msg)
 
@@ -83,12 +85,22 @@ async def submit(thread, event_id=None):
 
 # define the callback functions for each button
 async def confirm_callback(interaction: nextcord.Interaction):
+    await interaction.response.defer()
+
     thread = interaction.channel
     message = interaction.message
 
     # disable the buttons
     await update_button(message, True)
     # remove the message ID from the "Messages.tsv" file
+    data = pd.read_csv('data/Messages.tsv', sep='\t')
+
+    # get the index of the row that matches the message ID and delete the row from the DataFrame
+    index = data[data['messageId'] == message.id].index[0]
+    data = data.drop(index)
+
+    # write the updated DataFrame back to the file
+    data.to_csv('data/Messages.tsv', sep='\t', index=False)
 
     # event_id is only needed on object creation
     await submit(thread)
@@ -101,6 +113,7 @@ async def dnf_callback(interaction: nextcord.Interaction):
     
 
 async def update_button(message, disabled=False):
+
     # Create "OK", "+2", and "DNF" buttons
     confirm_button = nextcord.ui.Button(label="OK", style=nextcord.ButtonStyle.green, disabled=disabled)
     plus_two_button = nextcord.ui.Button(label="+2", style=nextcord.ButtonStyle.grey, disabled=disabled)

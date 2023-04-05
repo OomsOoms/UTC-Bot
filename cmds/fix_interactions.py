@@ -42,3 +42,4 @@ async def fix_interactions(bot):
 
     # Save the updated TSV file
     df.to_csv("data/Messages.tsv", sep='\t', index=False)
+    print("All interactions fixed")
