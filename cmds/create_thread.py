@@ -13,19 +13,18 @@ async def dropdown_callback(interaction):
     # Stop interaction failed message
     await interaction.response.defer()
 
-    # Get the selected option
-    selected_option = interaction.data["values"][0]
-    event_id = interaction.data["values"][0]
+    # Get the selected option's label and value
+    event_name, event_id = interaction.data['values'][0].split(",")
     
     # Create a new private thread
-    thread_name = f"Submit {selected_option}"
+    thread_name = f"Submit {event_name}"
     thread = await interaction.channel.create_thread(name=thread_name, auto_archive_duration=1440)
 
     # Add the user who clicked the button to the thread
     await thread.add_user(interaction.user)
 
     # Send a message to the thread
-    await thread.send(f"Welcome {interaction.user.mention}! This is your private thread for submitting {selected_option} results!")
+    await thread.send(f"Welcome {interaction.user.mention}! This is your private thread for submitting {event_name} results!")
 
     # Call the submit function to handle the submission process
     await submit(thread, event_id)
@@ -41,7 +40,7 @@ async def update_dropdown(message):
 
     if len(events_data_list["name"]) > 0:
         # Create SelectOption objects for each event
-        options = [SelectOption(label=event, value=eventId) for event, eventId in zip(events_data_list["name"], events_data_list["event_id"])]
+        options = [SelectOption(label=event, value=f"{event},{eventId}") for event, eventId in zip(events_data_list["name"], events_data_list["event_id"])]
 
 
         # Create a Select object with the options

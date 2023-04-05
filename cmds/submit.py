@@ -2,6 +2,7 @@ from nextcord.ui.view import View
 import pandas as pd
 import nextcord
 import pickle
+import sys
 import os
 
 
@@ -15,6 +16,9 @@ class ThreadObject:
     def __init__(self, thread_id, event_id):
         self.thread_id = thread_id
         self.event_id = event_id
+        self.competition_id = "compid"
+        self.round_num = 1
+        self.scramble_num = 1
 
 
 # Define the name of the pickle file
@@ -25,13 +29,15 @@ try:
     with open(PICKLE_FILE_PATH, "rb") as f:
         user_submit = pickle.load(f)
         
-except KeyboardInterrupt:
+except:
     # Handle the case where the file is empty or corrupted
     print(f"Error: {PICKLE_FILE_PATH} is empty or corrupted. Creating a new UserSubmit object.")
     user_submit = UserSubmit()
 
     with open(PICKLE_FILE_PATH, "wb") as f:
         pickle.dump(user_submit, f)
+
+print(f"UserSubmit object loaded: {sys.getsizeof(user_submit)} bytes")
 
 
 def get_thread_object(thread, event_id):
@@ -50,22 +56,22 @@ def get_thread_object(thread, event_id):
     return thread_object
 
 
-async def send_image(thread_object):
+async def send_image(thread_object, thread):
     # Check if the image link is already in the dictionary
-    key = (thread_object.event_id, thread_object.round_num, thread_object.scramble_num)
-    if key in thread_object.scramble_links:
+    key = (thread_object.competition_id, thread_object.event_id, thread_object.round_num, thread_object.scramble_num)
+    if key in user_submit.scramble_links:
         # If the link is found, send it
-        link = thread_object.scramble_links[key]
-        await thread_object.thread.send(link)
+        link = user_submit.scramble_links[key]
+        await thread.send(link)
     else:
         # If the link is not found, find the image and upload it
-        filename = f"{key}.png"
+        filename = f"images/{thread_object.competition_id}, {thread_object.event_id}, {thread_object.round_num}, {thread_object.scramble_num}.png"
         # replace with your code to find the image and upload it to Discord
         with open(filename, "rb") as f:
             image = nextcord.File(f)
-            message = await thread_object.thread.send(file=image)
+            message = await thread.send(file=image)
             link = message.attachments[0].url
-            thread_object.scramble_links[key] = link
+            user_submit.scramble_links[key] = link
         # delete the image file after uploading
         os.remove(filename)
 
@@ -74,19 +80,16 @@ async def submit(thread, event_id=None):
 
     thread_object = get_thread_object(thread, event_id)
 
-    #await send_image(thread_object) # not going to test this until there is images
-    msg = await thread.send(thread_object.thread_id)
+    await send_image(thread_object, thread)
+    msg = await thread.send("B L2 U F' L2 B' U2 D' L2 D2 L' B2 U F2 D F2 R2")
 
     await update_button(msg)
 
     with open('data/Messages.tsv', "a") as messages:
         messages.write(f"{thread.guild.id}\t{thread.id}\t{msg.id}\tupdate_button\n")
 
-
-# define the callback functions for each button
-async def confirm_callback(interaction: nextcord.Interaction):
-    await interaction.response.defer()
-
+# Code that all buttons need to run
+async def general_button_callback(interaction):
     thread = interaction.channel
     message = interaction.message
 
@@ -96,7 +99,7 @@ async def confirm_callback(interaction: nextcord.Interaction):
     data = pd.read_csv('data/Messages.tsv', sep='\t')
 
     # get the index of the row that matches the message ID and delete the row from the DataFrame
-    index = data[data['messageId'] == message.id].index[0]
+    index = data[data['message_id'] == message.id].index[0]
     data = data.drop(index)
 
     # write the updated DataFrame back to the file
@@ -105,19 +108,25 @@ async def confirm_callback(interaction: nextcord.Interaction):
     # event_id is only needed on object creation
     await submit(thread)
 
+# define the callback functions for each button
+async def confirm_callback(interaction: nextcord.Interaction):
+    await interaction.response.defer()
+    await general_button_callback(interaction)
+    
 async def plus_two_callback(interaction: nextcord.Interaction):
-    await interaction.send("+2")
+    await interaction.response.defer()
+    await general_button_callback(interaction)
 
 async def dnf_callback(interaction: nextcord.Interaction):
-    await interaction.send("DNF")
+    await interaction.response.defer()
+    await general_button_callback(interaction)
     
-
 async def update_button(message, disabled=False):
 
     # Create "OK", "+2", and "DNF" buttons
-    confirm_button = nextcord.ui.Button(label="OK", style=nextcord.ButtonStyle.green, disabled=disabled)
-    plus_two_button = nextcord.ui.Button(label="+2", style=nextcord.ButtonStyle.grey, disabled=disabled)
-    dnf_button = nextcord.ui.Button(label="DNF", style=nextcord.ButtonStyle.red, disabled=disabled)
+    confirm_button = nextcord.ui.Button(label="OK", style=nextcord.ButtonStyle.success, disabled=disabled)
+    plus_two_button = nextcord.ui.Button(label="+2", style=nextcord.ButtonStyle.secondary, disabled=disabled)
+    dnf_button = nextcord.ui.Button(label="DNF", style=nextcord.ButtonStyle.danger, disabled=disabled)
 
     # Add the call back for each button    
     confirm_button.callback = confirm_callback
