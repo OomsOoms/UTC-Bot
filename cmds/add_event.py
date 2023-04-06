@@ -24,6 +24,7 @@ def init_add_event(bot):
             self.emScram = nextcord.ui.TextInput(label="Srcambles list", min_length=5, max_length=4000, required=True, placeholder="Separate each scramble with a `,`", style=nextcord.TextInputStyle.paragraph)
             self.add_item(self.emScram)
 
+
         async def callback(self, interaction: nextcord.Interaction) -> None:
             # get event title and scrambles list from user input
             desc = str(self.emTitle.value)

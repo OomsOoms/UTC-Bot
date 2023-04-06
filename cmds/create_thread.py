@@ -23,11 +23,8 @@ async def dropdown_callback(interaction):
     # Add the user who clicked the button to the thread
     await thread.add_user(interaction.user)
 
-    # Send a message to the thread
-    await thread.send(f"Welcome {interaction.user.mention}! This is your private thread for submitting {event_name} results!")
-
     # Call the submit function to handle the submission process
-    await submit(thread, event_id)
+    await submit(thread, event_name, event_id)
 
 
 async def update_dropdown(message):
