@@ -27,7 +27,7 @@ async def dropdown_callback(interaction):
     await submit(thread, event_name, event_id)
 
 
-async def update_dropdown(message):
+async def event_selection_dropdown(message):
     """
     Updates the given message with a dropdown view containing options
     for each event in the events_data.csv file.
@@ -79,8 +79,8 @@ def init_create_thread(bot):
         msg = await msg.fetch()
 
         # Update the message with the dropdown
-        await update_dropdown(msg)
+        await event_selection_dropdown(msg)
 
         # Write the guild ID, channel ID, message ID and the to the .tsv file
         with open('data/Messages.tsv', 'a') as file:
-            file.write(f"{ctx.guild.id}\t{ctx.channel.id}\t{msg.id}\tupdate_dropdown\n")
+            file.write(f"{ctx.guild.id}\t{ctx.channel.id}\t{msg.id}\tevent_selection_dropdown\n")

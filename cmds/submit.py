@@ -92,10 +92,10 @@ async def submit(thread, event_name=None, event_id=None):
     await send_image((thread_object.competition_id, thread_object.event_id, thread_object.round_num, thread_object.scramble_num), thread)
     msg = await thread.send("Penalties")
 
-    await update_button(msg)
+    await penalties_buttons(msg)
 
     with open('data/Messages.tsv', "a") as messages:
-        messages.write(f"{thread.guild.id}\t{thread.id}\t{msg.id}\tupdate_button\n")
+        messages.write(f"{thread.guild.id}\t{thread.id}\t{msg.id}\tpenalties_buttons\n")
 
 # Code that all buttons need to run
 async def general_button_callback(interaction):
@@ -117,21 +117,21 @@ async def general_button_callback(interaction):
 
 # define the callback functions for each button
 async def confirm_callback(interaction: nextcord.Interaction):
-    await update_button(interaction.message, selected="OK")
+    await penalties_buttons(interaction.message, selected="OK")
     await general_button_callback(interaction)
     await interaction.response.defer()
     
 async def plus_two_callback(interaction: nextcord.Interaction):
-    await update_button(interaction.message, selected="+2")
+    await penalties_buttons(interaction.message, selected="+2")
     await general_button_callback(interaction)
     await interaction.response.defer()
 
 async def dnf_callback(interaction: nextcord.Interaction):
-    await update_button(interaction.message, selected="DNF")
+    await penalties_buttons(interaction.message, selected="DNF")
     await general_button_callback(interaction)
     await interaction.response.defer()
     
-async def update_button(message, selected=None):
+async def penalties_buttons(message, selected=None):
 
     # Create "OK", "+2", and "DNF" buttons
     confirm_button = nextcord.ui.Button(label="OK", style=nextcord.ButtonStyle.success)

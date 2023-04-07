@@ -4,7 +4,6 @@ import asyncio
 import csv
 
 #from ..main import fix_interactions
-from .create_thread import update_dropdown
 from .fix_interactions import fix_interactions
 
 

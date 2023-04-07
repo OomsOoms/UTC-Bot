@@ -1,7 +1,8 @@
 import nextcord
 import pandas as pd
-from .create_thread import update_dropdown
-from .submit import update_button
+from .create_thread import event_selection_dropdown
+from .submit import penalties_buttons
+from .results import results_dropdown
 
 async def fix_interactions(bot):
     # Load message IDs from a TSV file
