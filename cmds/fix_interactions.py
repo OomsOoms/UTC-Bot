@@ -1,7 +1,7 @@
 import nextcord
 import pandas as pd
-from .create_thread import event_selection_dropdown
-from .submit import penalties_buttons
+from .event_selector import event_selection_dropdown
+#from .submit import penalties_buttons
 from .results import results_dropdown
 
 async def fix_interactions(bot):
