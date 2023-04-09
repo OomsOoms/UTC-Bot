@@ -4,6 +4,7 @@ import nextcord
 import pickle
 import sys
 import asyncio
+from  persistent_view import PersistentView
 
 
 # Load the events and formats data using Pandas
@@ -71,6 +72,8 @@ def get_thread_object(thread, event_id):
 async def submit(thread, event_name=None, event_id=None, result=False):
 
     thread_object = get_thread_object(thread, event_id)
+
+    await thread.send("What's your favourite colour?", view=PersistentView())
 
     if result:
         thread_object.results.append(result)
