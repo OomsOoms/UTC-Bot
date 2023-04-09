@@ -1,5 +1,4 @@
 from datetime import datetime
-import pandas as pd
 import nextcord
 
 from cmds import init_cmds

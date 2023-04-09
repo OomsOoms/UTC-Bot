@@ -1,113 +1,202 @@
-import nextcord
 from nextcord.ui.view import View
+import pandas as pd
+import nextcord
+import pickle
+import sys
 import asyncio
-import csv
 
 
+# Load the events and formats data using Pandas
+events_df = pd.read_csv("data/Events.tsv", delimiter='\t')
+formats_df = pd.read_csv("data/Formats.tsv", delimiter='\t')
 
+class UserSubmit:
+    def __init__(self):
+        self.image_links = {}
+        self.thread_list = {}
+
+class ThreadObject:
+
+    def __init__(self, thread_id, event_id):
+        self.thread_id = thread_id
+        self.event_id = event_id
+        self.competition_id = "CubeClash2023"
+        self.round_num = 1
+        self.scramble_num = 0
+        self.results = []
+        
+        # Find the event format/type and solve count
+        self.average_id = events_df.loc[events_df['event_id'] == event_id, 'average_id'].values[0]
+        self.solve_count = formats_df.loc[formats_df['id'] == self.average_id, 'solve_count'].values[0]
+
+
+# Define the name of the pickle file
+PICKLE_FILE_PATH = "data/user_submit.pickle"
+
+# Load the UserSubmit object from the pickle file
+try:
+    with open(PICKLE_FILE_PATH, "rb") as f:
+        user_submit = pickle.load(f)
+        
+except:
+    # Handle the case where the file is empty or corrupted
+    print(f"Error: {PICKLE_FILE_PATH} is empty or corrupted. Creating a new UserSubmit object.")
+    user_submit = UserSubmit()
+
+    with open(PICKLE_FILE_PATH, "wb") as f:
+        pickle.dump(user_submit, f)
+
+print(f"UserSubmit object loaded: {sys.getsizeof(user_submit)} bytes")
+
+
+def get_thread_object(thread, event_id):
+    if (thread.id) in user_submit.thread_list:
+        thread_object = user_submit.thread_list[thread.id]
+    
+    else:
+        # Create and store the object in the dictionary for faster access in future calls. cant be pickled if the thread object is passed though
+        thread_object = ThreadObject(thread.id, event_id)
+        user_submit.thread_list[thread.id] = thread_object
+    
+    # Starts on 0 so it is returned as 1 the first time
+    thread_object.scramble_num += 1
+
+    # Save the object in the pickle file so it is up to date
+    with open(PICKLE_FILE_PATH, "wb") as f:
+        pickle.dump(user_submit, f)
+        
+    return thread_object
+
+
+async def submit(thread, event_name=None, event_id=None, result=False):
+
+    thread_object = get_thread_object(thread, event_id)
+
+    if result:
+        thread_object.results.append(result)
+
+    if thread_object.scramble_num == 1:
+        await thread.send("Additional information")
+
+    if thread_object.scramble_num > thread_object.solve_count:
+        embed = nextcord.Embed(title="3x3 - First round", description=thread_object.results)
+        msg = await thread.send(embed=embed)
+
+        await update_submit_button(msg)
+
+        with open('data/Messages.tsv', "a") as messages:
+            messages.write(f"{thread.guild.id}\t{thread.id}\t{msg.id}\tupdate_submit_button\n")
+
+    else:
+        msg = await thread.send(f"<Scramble {thread_object.scramble_num}>")
+
+        await update_confirm_button(msg)
+
+        with open('data/Messages.tsv', "a") as messages:
+            messages.write(f"{thread.guild.id}\t{thread.id}\t{msg.id}\tupdate_confirm_button\n")
 
 
 class EmbedModal(nextcord.ui.Modal):
-    def __init__(self):
-        super().__init__("<Event name> - <Round type>")
-        
-        # create TextInput for Scramble1
-        self.Scramble1 = nextcord.ui.TextInput(label="<Scramble1>", min_length=2, max_length=128, required=True, placeholder="mm:ss.ms")
-        self.add_item(self.Scramble1)
-        
-        # create TextInput for Scramble2
-        self.Scramble2 = nextcord.ui.TextInput(label="<Scramble2>", min_length=2, max_length=128, required=True, placeholder="mm:ss.ms")
-        self.add_item(self.Scramble2)
-        
-        # create TextInput for Scramble3
-        self.Scramble3 = nextcord.ui.TextInput(label="<Scramble3>", min_length=2, max_length=128, required=True, placeholder="mm:ss.ms")
-        self.add_item(self.Scramble3)
-        
-        # create TextInput for Scramble4
-        self.Scramble4 = nextcord.ui.TextInput(label="<Scramble4>", min_length=2, max_length=128, required=True, placeholder="mm:ss.ms")
-        self.add_item(self.Scramble4)
-        
-        # create TextInput for Scramble5
-        self.Scramble5 = nextcord.ui.TextInput(label="<Scramble5>", min_length=2, max_length=128, required=True, placeholder="mm:ss.ms")
-        self.add_item(self.Scramble5)
-    
-    async def on_interaction_init(self, interaction: nextcord.Interaction) -> None:
-        # set the description attribute of the Embed
-        self.embed.description = "Please enter the scrambles for the event below:"
-        await super().on_interaction_init(interaction)
+    def __init__(self, msg):
+        super().__init__("Submit Solve x")
+        self.msg = msg
 
-
-
+        # create TextInput for scramble
+        self.results = nextcord.ui.TextInput(label="<Scramble>", min_length=2, max_length=128, required=True, placeholder="mm:ss.ms")
+        self.add_item(self.results)
 
     async def callback(self, interaction: nextcord.Interaction) -> None:
-        # get event title and scrambles list from user input
-        desc = str(self.emTitle.value)
-        scrambles = str(self.emScram.value).split(",")
-
-        # format the scrambles list in the description
-        for i, x in enumerate(scrambles):
-            desc += f"\n**Scramble {i}**\n{x}"
-
-        # create embed with the event details
-        em = nextcord.Embed(title="Confirm new event", description=desc)
-
-        # create "Cancel" and "Confirm" buttons
-        cancel_button = nextcord.ui.Button(label="Cancel", style=nextcord.ButtonStyle.red, custom_id="cancel_button")
-        cancel_button.callback = self.cancel_callback
-
-        confirm_button = nextcord.ui.Button(label="Confirm", style=nextcord.ButtonStyle.green, custom_id="confirm_button", disabled=False)
-        confirm_button.callback = self.confirm_callback
-
-        # add buttons to a view
-        view = View()
-        view.add_item(cancel_button)
-        view.add_item(confirm_button)
-
-        # send the embed with the view and buttons to the user
-        await interaction.response.send_message(embed=em, view=view)
-
-    async def confirm_callback(self, interaction: nextcord.Interaction) -> None:
-        # create "Cancel" and "Event Added" buttons, both disabled
-        cancel_button = nextcord.ui.Button(label="Cancel", style=nextcord.ButtonStyle.danger, custom_id="cancel_button", disabled=True)
-        confirm_button = nextcord.ui.Button(label="Event Added", style=nextcord.ButtonStyle.success, custom_id="confirm_button", disabled=True)
-
-        # add buttons to a view
-        view = nextcord.ui.View()
-        view.add_item(cancel_button)
-        view.add_item(confirm_button)
-
-        # edit the message with the view and buttons to show that the event was added
-        message = interaction.message
-        
-        await message.edit(view=view) # type: ignore
-
-        # write the new event data to the CSV file
-        with open("events_data.csv", "a", newline="") as csv_file:
-            writer = csv.writer(csv_file)
-            writer.writerow(["Place holder", "Place holder", "Place holder"])
-
-        #await fix_interactions(bot)
-
-    async def cancel_callback(self, interaction: nextcord.Interaction) -> None:
-        # create "Cancelling" and "Confirm" buttons, both disabled
-        cancel_button = nextcord.ui.Button(label="Cancelling", style=nextcord.ButtonStyle.danger, custom_id="cancel_button", disabled=True)
-        confirm_button = nextcord.ui.Button(label="Confirm", style=nextcord.ButtonStyle.success, custom_id="confirm_button", disabled=True)
-
-        # add buttons to a view
-        view = nextcord.ui.View()
-        view.add_item(cancel_button)
-        view.add_item(confirm_button)
-
-        # edit the message with the view and buttons to show that the cancellation was successful
-        message = interaction.message
         await interaction.response.defer()
-        await message.edit(view=view) # type: ignore
+        thread = interaction.channel
+        message = interaction.message
 
-        # wait 2 seconds
-        await asyncio.sleep(2)
-        await interaction.message.delete() # type: ignore
+        # remove the message ID from the "Messages.tsv" file
+        messages = pd.read_csv('data/Messages.tsv', sep='\t')
+
+        # get the index of the row that matches the message ID and delete the row from the DataFrame
+        index = messages[messages['message_id'] == message.id].index[0]
+        messages = messages.drop(index)
+
+        # write the updated DataFrame back to the file
+        messages.to_csv('data/Messages.tsv', sep='\t', index=False)
+
+        # disable the button
+        await update_confirm_button(self.msg, True)
+
+        # event_id is only needed on object creation
+        await submit(thread, result=self.results.value)
+
+        
 
 
-async def submit(interaction, event_name, event_id):
-    # display the modal dialog to the user
-    await interaction.response.send_modal(EmbedModal())
+# define the callback functions for each button
+async def confirm_callback(interaction: nextcord.Interaction, msg):
+    await interaction.response.send_modal(EmbedModal(msg))
+    
+
+    
+async def update_confirm_button(msg, disabled=False):
+    # Create "Submit" button
+    confirm_button = nextcord.ui.Button(label="Submit" if not disabled else "Submitted", style=nextcord.ButtonStyle.primary, disabled=disabled)
+
+    # Add the call back for each button    
+    confirm_button.callback = lambda i: confirm_callback(i, msg)
+
+    # Add buttons to a view
+    view = View(timeout=None)
+    view.add_item(confirm_button)
+
+    # Update the message with the view
+    await msg.edit(view=view)
+
+async def submit_callback(interaction: nextcord.Interaction):
+    await interaction.response.defer()
+    thread = interaction.channel
+    await thread.send("Submitting...")
+    await asyncio.sleep(1)
+    await thread.delete()
+    # remove the message ID from the "Messages.tsv" file
+    messages = pd.read_csv('data/Messages.tsv', sep='\t')
+
+    # get the index of the row that matches the message ID and delete the row from the DataFrame
+    index = messages[messages['message_id'] == interaction.message.id].index[0]
+    messages = messages.drop(index)
+
+    # write the updated DataFrame back to the file
+    messages.to_csv('data/Messages.tsv', sep='\t', index=False)
+
+async def update_submit_button(msg):
+    submit_button = nextcord.ui.Button(label="Submit", style=nextcord.ButtonStyle.success)
+    edit_button = nextcord.ui.Button(label="Edit response", style=nextcord.ButtonStyle.secondary)
+
+    submit_button.callback = submit_callback
+
+    view = View(timeout=None)
+    view.add_item(submit_button)
+    view.add_item(edit_button)
+
+    await msg.edit(view=view)
+
+
+"""
+async def send_image(keys, thread):
+    # Check if the image link is already in the dictionary
+    if keys in user_submit.image_links:
+        # If the link is found, send it
+        link = user_submit.image_links[keys]
+        await thread.send(link)
+    else:
+        # If the link is not found, find the image and upload it
+        filename = "images/"
+        for x in keys:
+            filename += f"{x}, "
+        filename = f"{filename[:-2]}.png"
+        # replace with your code to find the image and upload it to Discord
+        with open(filename, "rb") as f:
+            image = nextcord.File(f)
+            message = await thread.send(file=image)
+            link = message.attachments[0].url
+            user_submit.image_links[keys] = link
+        # delete the image file after uploading
+        os.remove(filename)
+"""

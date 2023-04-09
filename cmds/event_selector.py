@@ -6,25 +6,24 @@ from .submit import submit
 
 
 async def dropdown_callback(interaction):
-    """
-    Callback function for the dropdown view. Creates a new private thread
-    and adds the user who clicked the button to the thread.
-    """
     # Stop interaction failed message
-    #await interaction.response.defer()
+    await interaction.response.defer()
 
     # Get the selected option's label and value
     event_name, event_id = interaction.data['values'][0].split(",")
 
+    # Create a new private thread
+    thread_name = f"Submit {event_name}"
+    thread = await interaction.channel.create_thread(name=thread_name, auto_archive_duration=1440)
+
+    # Add the user who clicked the button to the thread
+    await thread.add_user(interaction.user)
+
     # Call the submit function to handle the submission process
-    await submit(interaction, event_name, event_id)
+    await submit(thread, event_name=event_name, event_id=event_id)
 
 
-async def event_selection_dropdown(message):
-    """
-    Updates the given message with a dropdown view containing options
-    for each event in the events_data.csv file.
-    """
+async def update_event_selector(message):
     # Read the events data from the CSV file
     events_data_list = pd.read_csv("data/Events.tsv", sep='\t').to_dict("list")
 
@@ -40,7 +39,7 @@ async def event_selection_dropdown(message):
         dropdown.callback = dropdown_callback
 
         # Create a View object and add the dropdown to it
-        view = View()
+        view = View(timeout=None)
         view.add_item(dropdown)
 
         # Edit the message with the new content and view
@@ -51,10 +50,6 @@ async def event_selection_dropdown(message):
 
 
 def init_event_selector(bot):
-    """
-    Initializes the /create_thread slash command and sends an embed with information
-    about the competition and a dropdown view for selecting an event.
-    """
     @bot.slash_command(name="event_selector", description="Creates a private thread for the user who clicks the button in the dropdown")
     async def event_selector(ctx):
         # Create an Embed object with information about the competition
@@ -72,8 +67,8 @@ def init_event_selector(bot):
         msg = await msg.fetch()
 
         # Update the message with the dropdown
-        await event_selection_dropdown(msg)
+        await update_event_selector(msg)
 
         # Write the guild ID, channel ID, message ID and the to the .tsv file
         with open('data/Messages.tsv', 'a') as file:
-            file.write(f"{ctx.guild.id}\t{ctx.channel.id}\t{msg.id}\tevent_selection_dropdown\n")
+            file.write(f"{ctx.guild.id}\t{ctx.channel.id}\t{msg.id}\tupdate_event_selector\n")

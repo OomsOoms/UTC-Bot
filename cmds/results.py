@@ -3,33 +3,27 @@ from nextcord import SelectOption
 from nextcord.ui import Select, View
 from nextcord import Embed
 from nextcord.embeds import Embed
-from .submit import submit
+
 
 results = pd.read_csv('data/Results.tsv', sep='\t')
 competitions = pd.read_csv('data/Competitions.tsv', sep='\t')
 
 
-def generate_results_embed(event_name, event_results, num_highlight=5):
+results = pd.read_csv('data/Results.tsv', sep='\t')
+competitions = pd.read_csv('data/Competitions.tsv', sep='\t')
+
+
+def generate_results_embed(event_name, event_results, num_highlight=8):
     
     # Define maximum width for each column
-    max_rank_width = 5
-    max_user_id_width = 10
-    max_guild_name_width = 10
+    max_rank_width = 3
+    max_user_id_width = 15
+    max_guild_name_width = 20
+    max_value_width = 5
     max_average_width = 8
     max_best_width = 8
+    max_width = max(max_rank_width, max_value_width, max_best_width)
     
-    # Find the widest data in each column
-    for i, row in event_results.iterrows():
-        max_rank_width = max(max_rank_width, len(str(i+1)))
-        max_user_id_width = max(max_user_id_width, len(str(row['user_id'])))
-        
-        #guild = next((g for g in bot.guilds if g.id == row['guild_id']), None)
-        guild_name = "Guild"#guild.name if guild else "Unknown guild"
-        max_guild_name_width = max(max_guild_name_width, len(guild_name))
-
-        max_average_width = max(max_average_width, len("{:.2f}".format(row['average'])))
-        max_best_width = max(max_best_width, len("{:.2f}".format(row['best'])))
-        
     # Truncate guild names and user IDs longer than their respective max width
     event_results['guild_id'] = event_results['guild_id'].apply(lambda x: x[:max_guild_name_width])
     event_results['user_id'] = event_results['user_id'].apply(lambda x: x[:max_user_id_width])
@@ -38,15 +32,14 @@ def generate_results_embed(event_name, event_results, num_highlight=5):
     event_results['guild_id'] = event_results['guild_id'].apply(lambda x: x.ljust(max_guild_name_width))
     event_results['user_id'] = event_results['user_id'].apply(lambda x: x.ljust(max_user_id_width))
     
-    # Define the column headers
-    header_row = f"{'Rank'.ljust(max_rank_width)}  {'User ID'.ljust(max_user_id_width)}  {'Guild Name'.ljust(max_guild_name_width)}  {'Average'.ljust(max_average_width)}  {'Best'.ljust(max_best_width)}"
+    # Define the column headers with left alignment
+    header_row = f"{'Rank'.ljust(max_rank_width)} {'User'.ljust(max_user_id_width)} {'Guild Name'.ljust(max_guild_name_width)} {'1'.rjust(max_width)} {'2'.rjust(max_width)} {'3'.rjust(max_width)} {'4'.rjust(max_width)} {'5'.rjust(max_width)} {'Average'.rjust(max_average_width)} {'Best'.rjust(max_best_width)}"
 
-    # Define the rows
+    # Define the rows with right alignment for value, average, and best columns
     rows = []
     for i, row in event_results.iterrows():
-        #guild = next((g for g in bot.guilds if g.id == row['guild_id']), None)
-        guild_name = "Guild"#guild.name if guild else "Unknown guild"
-        row_text = f"{str(i+1).ljust(max_rank_width)}  {str(row['user_id']).ljust(max_user_id_width)}  {guild_name.ljust(max_guild_name_width)}  {'{:.2f}'.format(row['average']).ljust(max_average_width)}  {'{:.2f}'.format(row['best']).ljust(max_best_width)}"
+        guild_name =  row['guild_id']
+        row_text = f"{str(i+1).ljust(max_rank_width)}{str(row['user_id']).ljust(max_user_id_width)} {guild_name.ljust(max_guild_name_width)} {str(row['value_1']).rjust(max_width)} {str(row['value_2']).rjust(max_width)} {str(row['value_3']).rjust(max_width)} {str(row['value_4']).rjust(max_width)} {str(row['value_5']).rjust(max_width)} {str(row['average']).rjust(max_average_width)} {str(row['best']).rjust(max_best_width)}"
         
         # Highlight the first num_highlight rows in green
         if i < num_highlight:
@@ -56,18 +49,9 @@ def generate_results_embed(event_name, event_results, num_highlight=5):
 
     # Combine the header and rows into a single message
     message = header_row + "\n" + "-" * len(header_row) + "\n" + "\n".join(rows)
-
     message = "```diff\n" + message + "\n```"
-
+    
     return message
-
-
-
-
-
-
-
-
 
 
 async def dropdown_callback(interaction):
@@ -86,8 +70,8 @@ async def dropdown_callback(interaction):
                                 (results['round_num'] == round_num)]
             
         if not event_results.empty:
-            embed = generate_results_embed(event_name, event_results)
-            await interaction.response.send_message(embed)
+            message = generate_results_embed(event_name, event_results)
+            await interaction.response.send_message(message, ephemeral=True)
         else:
             await interaction.response.send_message(f"The results for this {event_name} are not available yet", ephemeral=True)
 
@@ -115,7 +99,7 @@ async def results_dropdown(message):
         dropdown.callback = dropdown_callback
 
         # Create a View object and add the dropdown to it
-        view = View()
+        view = View(timeout=None)
         view.add_item(dropdown)
 
         # Edit the message with the new content and view
