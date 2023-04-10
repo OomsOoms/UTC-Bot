@@ -1,3 +1,48 @@
-competition_id	day_number	event_id	round	advance_num
-CubeClash2023	1	333	1	0.75
-CubeClash2023	1	222	1	0.75
+competition_id	event_id	day_number	round	advance
+CubeClash2023	777	1	f	3
+CubeClash2023	222	1	1	0.75
+CubeClash2023	333mbf	1	f	3
+CubeClash2023	2-4	1	1	12
+CubeClash2023	333oh	1	1	12
+
+CubeClash2023	333	2	1	0.75
+CubeClash2023	222oh	2	1	12
+CubeClash2023	444bf	2	f	3
+CubeClash2023	555	2	1	8
+CubeClash2023	sq1	2	1	8
+CubeClash2023	666	2	f	3
+
+CubeClash2023	pyram	3	1	12
+CubeClash2023	222	3	2	16
+CubeClash2023	skewb	3	1	12
+CubeClash2023	333bf	3	1	8
+CubeClash2023	555bf	3	f	3
+CubeClash2023	444	3	1	12
+
+CubeClash2023	333	4	2	16
+CubeClash2023	clock	4	f	3
+CubeClash2023	minx	4	ff	3
+CubeClash2023	2-4	4	f	3
+CubeClash2023	222bf	4	f	3
+CubeClash2023	mirror	4	1	8
+
+CubeClash2023	333bf	5	ff	3
+CubeClash2023	333oh	5	f	3
+CubeClash2023	555	5	f	3
+CubeClash2023	skewb	5	f	3
+CubeClash2023	444	5	f	3
+CubeClash2023	222oh	5	f	3
+
+CubeClash2023	333	6	f	3
+CubeClash2023	222	6	f	3
+CubeClash2023	pyram	6	f	3
+CubeClash2023	sq1	6	f	3
+CubeClash2023	mirror	6	f	3
+CubeClash2023	vcube	6	f	3
+
+CubeClash2023	333fm	1	1	3
+CubeClash2023	333fm	2	1	3
+CubeClash2023	333fm	3	1	3
+CubeClash2023	333fm	4	1	3
+CubeClash2023	333fm	5	1	3
+CubeClash2023	333fm	6	1	3

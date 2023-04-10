@@ -14,7 +14,7 @@ def generate_results_embed(event_name, event_results, num_highlight=8):
     max_rank_width = 3
     max_user_id_width = 15
     max_guild_name_width = 20
-    max_value_width = 5
+    max_value_width = 8
     
     # Truncate guild names and user IDs longer than their respective max width
     event_results['guild_id'] = event_results['guild_id'].apply(lambda x: x[:max_guild_name_width])
@@ -60,7 +60,7 @@ class ResultSelectorView(nextcord.ui.View):
         # Get the selected option's label and value
         event_name, event_id = interaction.data['values'][0].split(",")
 
-        competition_id = competitions.loc[competitions['active_day'] != False, 'competition_id'].item()
+        competition_id = competitions[competitions["active_day"] != 0].iloc[0]["competition_id"]
 
         round_num = 1
 
@@ -80,8 +80,8 @@ class ResultSelectorView(nextcord.ui.View):
 
 
 def init_results_selector(bot):
-    @bot.slash_command(name="leaderboard", description="Creates a private thread for the user who clicks the button in the dropdown")
-    async def leaderboard(ctx):
+    @bot.slash_command(name="results-selector", description="Creates a private thread for the user who clicks the button in the dropdown")
+    async def results_selector(ctx):
 
         # Create an Embed object with information about the competition
         embed = Embed(title="Cubing Competition Information", color=0xffa500)

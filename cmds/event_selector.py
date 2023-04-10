@@ -4,43 +4,32 @@ from nextcord import Embed
 from .submit import submit
 
 
-# Load data
-competitions_df = pd.read_csv("data/Competitions.tsv", sep="\t")
-schedules_df = pd.read_csv("data/Schedules.tsv", sep="\t")
-events_df = pd.read_csv("data/Events.tsv", sep="\t")
-
-
 class EventSelectorView(nextcord.ui.View):
     def __init__(self):
         super().__init__(timeout=None)
 
-
-    # Read the competitions data
-    competitions_data = pd.read_csv("data/Competitions.tsv", sep="\t")
+    # Load data
+    competitions_df = pd.read_csv("data/Competitions.tsv", sep="\t")
+    schedules_df = pd.read_csv("data/Schedules.tsv", sep="\t")
+    events_df = pd.read_csv("data/Events.tsv", sep="\t")
 
     # Find the active competition
-    active_competition = competitions_data[competitions_data["active_day"] != False].iloc[0]["competition_id"]
-
-    # Read the schedules data
-    schedules_data = pd.read_csv("data/Schedules.tsv", sep="\t")
+    active_competition = competitions_df[competitions_df["active_day"] != 0].iloc[0]["competition_id"]
 
     # Find the schedule for the active day of the active competition
-    active_day = competitions_data[competitions_data["competition_id"] == active_competition].iloc[0]["active_day"]
-    active_schedule = schedules_data[(schedules_data["competition_id"] == active_competition) & (schedules_data["day_number"] == active_day)]
+    active_day = competitions_df[competitions_df["competition_id"] == active_competition].iloc[0]["active_day"]
+    active_schedule = schedules_df[(schedules_df["competition_id"] == active_competition) & (schedules_df["day_number"] == active_day)]
 
     # Get the event IDs from the active schedule
     event_ids = active_schedule["event_id"].tolist()
 
-    # Read the events data
-    events_data = pd.read_csv("data/Events.tsv", sep="\t")
-
     # Filter the events data to only include the events with the IDs from the active schedule
-    active_events_data = events_data[events_data["event_id"].isin(event_ids)]
+    active_events_data = events_df[events_df["event_id"].astype(str).isin([str(event_id) for event_id in event_ids])]
 
     # Create the select menu options
-    options = [nextcord.SelectOption(label=event_name, value=f"{event_id},{event_id}") for event_name, event_id in zip(active_events_data["name"], active_events_data["event_id"])]
-
-
+    options = [nextcord.SelectOption(label=event_name, value=f"{event_id},{event_format}") for event_name, event_id, event_format in zip(active_events_data["name"], active_events_data["event_id"], active_events_data["format"])]
+    print(options)
+    # Define the select menu
     @nextcord.ui.select(
         placeholder="Select an option", options=options, custom_id="EventSelectorView:dropdown"
     )
@@ -62,7 +51,7 @@ class EventSelectorView(nextcord.ui.View):
 
 
 def init_event_selector(bot):
-    @bot.slash_command(name="event_selector", description="Creates a private thread for the user who clicks the button in the dropdown")
+    @bot.slash_command(name="event-selector", description="Creates a private thread for the user who clicks the button in the dropdown")
     async def event_selector(ctx):
         # Create an Embed object with information about the competition
         embed = Embed(title="Cubing Competition Information", color=0xffa500)
@@ -73,4 +62,9 @@ def init_event_selector(bot):
         embed.add_field(name="Good Luck!", value="Have fun competing! If you have any questions, feel free to ask in the designated discussion channel.")
 
         # Send the embed to a channel or user
-        await ctx.send(embed=embed, view=EventSelectorView())
+        msg = await ctx.send(embed=embed, view=EventSelectorView())
+
+        msg = await msg.fetch()
+
+        with open('data/Messages.tsv', "a") as messages:
+            messages.write(f"{ctx.channel.id}\t{msg.id}\n")
