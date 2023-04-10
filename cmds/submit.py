@@ -4,7 +4,6 @@ import nextcord
 import pickle
 import sys
 import asyncio
-from  persistent_view import PersistentView
 
 
 # Load the events and formats data using Pandas

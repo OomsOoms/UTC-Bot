@@ -1,3 +1,3 @@
-competition_id	competition_name	active
-2023test01	test	0
+competition_id	competition_name	active_day
+2023test01	test	False
 CubeClash2023	Cube Clash Spring 2023	1
