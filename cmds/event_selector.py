@@ -28,7 +28,7 @@ class EventSelectorView(nextcord.ui.View):
 
     # Create the select menu options
     options = [nextcord.SelectOption(label=event_name, value=f"{event_id},{event_format}") for event_name, event_id, event_format in zip(active_events_data["name"], active_events_data["event_id"], active_events_data["format"])]
-    print(options)
+
     # Define the select menu
     @nextcord.ui.select(
         placeholder="Select an option", options=options, custom_id="EventSelectorView:dropdown"
@@ -38,7 +38,7 @@ class EventSelectorView(nextcord.ui.View):
         await interaction.response.defer()
 
         # Get the selected option's label and value
-        event_name, event_id = interaction.data['values'][0].split(",")
+        event_id, event_name  = interaction.data['values'][0].split(",")
 
         # Create a new private thread
         thread = await interaction.channel.create_thread(name=f"Submit {event_name}", auto_archive_duration=1440)

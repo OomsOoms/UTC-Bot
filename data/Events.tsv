@@ -4,7 +4,7 @@ event_id	name	format	average_id
 333bf	3x3x3 Blindfolded	time	3
 333fm	3x3x3 Fewest Moves	number	1
 333ft	3x3x3 With Feet	time	a
-333mbf	3x3x3 Multi-Blind	multi	1 
+333mbf	3x3x3 Multi-Blind	multi	1
 333oh	3x3x3 One-Handed	time	a
 444	4x4x4 Cube	time	a
 444bf	4x4x4 Blindfolded	time	3
