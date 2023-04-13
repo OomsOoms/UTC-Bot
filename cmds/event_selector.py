@@ -27,7 +27,7 @@ class EventSelectorView(nextcord.ui.View):
     active_events_data = events_df[events_df["event_id"].astype(str).isin([str(event_id) for event_id in event_ids])]
 
     # Create the select menu options
-    options = [nextcord.SelectOption(label=event_name, value=f"{event_id},{event_format}") for event_name, event_id, event_format in zip(active_events_data["name"], active_events_data["event_id"], active_events_data["format"])]
+    options = [nextcord.SelectOption(label=event_name, value=f"{event_id},{event_name}") for event_name, event_id in zip(active_events_data["name"], active_events_data["event_id"])]
 
     # Define the select menu
     @nextcord.ui.select(

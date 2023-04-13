@@ -1,4 +1,5 @@
 from nextcord import SlashOption
+import nextcord
 import pandas as pd
 
 from .event_selector import EventSelectorView
@@ -25,6 +26,14 @@ def init_day_selector(bot):
             channel = bot.get_channel(int(row["channel_id"]))
             message = await channel.fetch_message(int(row["message_id"]))
 
-            """Update the dropdown options for each message in the file"""
+            # Get the select menu component
+            select_menu = message.components[0].components[0]
+
+            # Change the options
+            new_options = [nextcord.SelectOption(label="Option 1", value="option1"), nextcord.SelectOption(label="Option 2", value="option2")]
+            select_menu.options = new_options
+
+            # Update the message
+            await message.edit(components=[nextcord.ActionRow(select_menu)])
 
 
