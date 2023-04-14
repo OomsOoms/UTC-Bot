@@ -20,9 +20,10 @@ class UserSubmit:
 
 class ThreadObject:
 
-    def __init__(self, thread_id, event_id):
+    def __init__(self, thread_id, event_id, user_id):
         self.thread_id = thread_id
         self.event_id = event_id
+        self.user_id = user_id
         self.competition_id = competitions_df[competitions_df["active_day"] != 0].iloc[0]["competition_id"]
         self.scramble_num = 0
         self.results = []
@@ -40,8 +41,14 @@ class ThreadObject:
                 self.round_num = row_dict["round"]
                 break
 
-        self.average_id = events_df.loc[events_df['event_id'] == event_id, 'average_id'].values[0]
-        self.solve_count = formats_df.loc[formats_df['id'] == self.average_id, 'solve_count'].values[0]
+        self.format_row = list(events_df.loc[events_df['event_id'] == event_id].to_dict('records')[0].items())
+        print(self.format_row)
+        self.solve_count = formats_df.loc[formats_df['id'] == self.format_row[1][1], 'solve_count'].values[0]
+        print(self.solve_count)
+
+ 
+
+
 
 
 # Define the name of the pickle file
@@ -63,13 +70,13 @@ except:
 print(f"UserSubmit object loaded: {sys.getsizeof(user_submit)} bytes")
 
 
-def get_thread_object(thread, event_id=None, increment=True):
+def get_thread_object(thread, event_id=None, increment=True, user_id=None):
     if (thread.id) in user_submit.thread_list:
         thread_object = user_submit.thread_list[thread.id]
     
     else:
         # Create and store the object in the dictionary for faster access in future calls. cant be pickled if the thread object is passed though
-        thread_object = ThreadObject(thread.id, event_id)
+        thread_object = ThreadObject(thread.id, event_id, user_id)
         user_submit.thread_list[thread.id] = thread_object
     
     if increment:
@@ -82,13 +89,14 @@ def get_thread_object(thread, event_id=None, increment=True):
         
     return thread_object
 
+def check_format():
+    True
 
 class EmbedModal(nextcord.ui.Modal):
     def __init__(self, thread_object):
         super().__init__(f"Submit Solve {thread_object.scramble_num}")
 
-        # create TextInput for scramble
-        self.results = nextcord.ui.TextInput(label=f"Scramble {thread_object.scramble_num}", min_length=2, max_length=128, required=True, placeholder="mm:ss.ms" if thread_object.format == "time" else "Number" if thread_object.format == "number" else "cubes solved/cubes attempted mm:ss")
+        self.results = nextcord.ui.TextInput(label=f"Scramble {thread_object.scramble_num}", min_length=2, max_length=128, required=True, placeholder=format)
         self.add_item(self.results)
 
     async def callback(self, interaction: nextcord.Interaction) -> None:
@@ -96,17 +104,25 @@ class EmbedModal(nextcord.ui.Modal):
         thread = interaction.channel
         msg = interaction.message
 
-        # Create "Submit" button
-        submitted_button = nextcord.ui.Button(label="Submitted", style=nextcord.ButtonStyle.primary, disabled=True)
-        
-        view=View()
-        view.add_item(submitted_button)
+        if interaction.user.id == get_thread_object(thread=thread, increment=False).user_id:
 
-        # Update the message with the view
-        await msg.edit(view=view)
+            if check_format():
+                await interaction.send("Invalid format", ephemeral=True)
+            else:
+                # event_id is only needed on object creation
+                await submit(thread, result=self.results.value)
 
-        # event_id is only needed on object creation
-        await submit(thread, result=self.results.value)
+                # Create "Submit" button
+                submitted_button = nextcord.ui.Button(label="Submitted", style=nextcord.ButtonStyle.primary, disabled=True)
+                
+                view=View()
+                view.add_item(submitted_button)
+
+                # Update the message with the view
+                await msg.edit(view=view)
+
+        else:
+            await interaction.send("This is not your thread!", ephemeral=True)
 
 
 class SubmitModalView(nextcord.ui.View):
@@ -144,9 +160,9 @@ class ConfirmModalView(nextcord.ui.View):
         await thread.delete()
 
 
-async def submit(thread, event_name=None, event_id=None, result=False):
+async def submit(thread, event_name=None, event_id=None, result=False, user_id=None):
 
-    thread_object = get_thread_object(thread=thread, event_id=event_id)
+    thread_object = get_thread_object(thread=thread, event_id=event_id, user_id=user_id)
     
     if result:
         thread_object.results.append(result)
@@ -159,6 +175,10 @@ async def submit(thread, event_name=None, event_id=None, result=False):
         embed.add_field(name="Solves", value = "\n".join(str(solve) for solve in thread_object.results))
         embed.add_field(name="Average", value="12.34")
         msg = await thread.send(embed=embed, view=ConfirmModalView())
+
+        sorted_times = sorted(thread_object.results)
+
+        trimmed_times = sorted_times[trim_fastest_n:len(sorted_times)-trim_slowest_n]
 
     else:
         scramble = scrambles_df.loc[(scrambles_df['competition_id'] == thread_object.competition_id) &
