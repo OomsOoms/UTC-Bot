@@ -1,4 +1,9 @@
 competition_id	event_id	day_number	round	advance
+CubePlaceTest	333	1	f	3
+CubePlaceTest	222	1	f	3
+CubePlaceTest	pyram	1	f	3
+CubePlaceTest	clock	1	f	3
+
 CubeClash2023	777	1	f	3
 CubeClash2023	222	1	1	0.75
 CubeClash2023	333mbf	1	f	3
