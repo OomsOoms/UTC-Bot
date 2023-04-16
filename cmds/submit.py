@@ -14,7 +14,6 @@ schedules_df = pd.read_csv("data/Schedules.tsv", sep="\t")
 scrambles_df = pd.read_csv("data/Scrambles.tsv", sep="\t")
 
 
-
 class UserSubmit:
     def __init__(self):
         self.thread_list = {}
@@ -29,6 +28,7 @@ class ThreadObject:
         self.competition_id = competitions_df[competitions_df["active_day"] != 0].iloc[0]["competition_id"]
         self.scramble_num = 0
         self.results = []
+        self.average = None
 
 
         # Find the schedule for the active day of the active competition
@@ -87,8 +87,45 @@ def get_thread_object(thread, event_id=None, increment=True, interaction=None):
         
     return thread_object
 
-def check_format():
-    True
+def convert_time(raw_time):
+    try:
+        penalty = 2 if "+2" in raw_time else 0
+
+        raw_time = raw_time.replace("+2", "")
+
+        # First, split the time into minutes and seconds, if applicable
+        time_parts = raw_time.split(":")
+
+        if len(time_parts) == 1:
+            # If there are no minutes, just use the raw time as the seconds
+            seconds = float(raw_time)
+        else:
+            # Otherwise, convert the minutes and seconds to seconds
+            minutes = int(time_parts[0])
+            seconds = float(time_parts[1])
+            seconds += minutes * 60
+
+        if int(seconds) < 0:
+            return False
+
+        seconds, ms = str(seconds).split(".")
+
+        seconds = str(int(seconds) + penalty)
+
+        ms = ms[:2]
+
+        ms = f"{ms}0" if len(ms) == 1 else ms
+
+        return f"{seconds}{ms}"
+    
+    except:
+        if "dnf" in raw_time.lower():
+            return -1
+        
+        else:
+            return False
+
+
 
 class EmbedModal(nextcord.ui.Modal):
     def __init__(self, thread_object):
@@ -102,12 +139,11 @@ class EmbedModal(nextcord.ui.Modal):
         thread = interaction.channel
         msg = interaction.message
 
-    
-        if check_format():
-            await interaction.send("Invalid format", ephemeral=True)
-        else:
+        converted_time = int(convert_time(self.results.value))
+
+        if converted_time:
             # event_id is only needed on object creation
-            await submit(thread, result=self.results.value)
+            await submit(thread, result=converted_time)
 
             # Create "Submit" button
             submitted_button = nextcord.ui.Button(label="Submitted", style=nextcord.ButtonStyle.primary, disabled=True)
@@ -117,8 +153,8 @@ class EmbedModal(nextcord.ui.Modal):
 
             # Update the message with the view
             await msg.edit(view=view)
-
-
+        else:
+            await interaction.send("Invalid format", ephemeral=True)
 
 
 class SubmitModalView(nextcord.ui.View):
@@ -154,7 +190,6 @@ class ConfirmModalView(nextcord.ui.View):
             # Create "Submit" button
             submitting_button = nextcord.ui.Button(label="Submitting...", style=nextcord.ButtonStyle.success, disabled=True)
 
-
             view=View()
             view.add_item(submitting_button)
 
@@ -165,27 +200,16 @@ class ConfirmModalView(nextcord.ui.View):
 
             thread_object = get_thread_object(thread=thread, increment=False)
 
-            sorted_times = sorted(thread_object.results)
-
-            trimmed_times = sorted_times[thread_object.trim[0]:thread_object.solve_count-thread_object.trim[1]]
-
-            trimmed_times = [float(time) for time in trimmed_times]
-
-            # Calculate the mean of the remaining times
-            average = sum(trimmed_times) / len(trimmed_times)
-
-            best = min(thread_object.results)
+            best = min([result for result in thread_object.results if result != -1])
 
             pos = 1
 
             values_list = "\t".join(str(solve) for solve in thread_object.results)
 
             with open("data/Results.tsv", 'a+') as file:
-                file.write(f"{thread_object.competition_id}\t{thread_object.event_id}\t{thread_object.guild_id}\t{thread_object.user_id}\t{pos}\t{thread_object.round_type}\t{str(average)}\t{str(best)}\t{values_list}\n")
-
+                file.write(f"{thread_object.competition_id}\t{thread_object.event_id}\t{thread_object.guild_id}\t{thread_object.user_id}\t{pos}\t{thread_object.round_type}\t{thread_object.average}\t{str(best)}\t{values_list}\n")
 
             await thread.delete()
-
 
         except Exception as error:
             print(error)
@@ -219,18 +243,24 @@ If you get DNF, input "DNF" without the quotes in the time submission field.""")
 
         trimmed_times = sorted_times[thread_object.trim[0]:thread_object.solve_count-thread_object.trim[1]]
 
-        trimmed_times = [float(time) for time in trimmed_times]
+        count_minus_ones = thread_object.results.count(-1)
 
-        # Calculate the mean of the remaining times
-        average = sum(trimmed_times) / len(trimmed_times)
+        if count_minus_ones == 2:
+            thread_object.average = -1
+            average = "DNF"
+        else:
+            mean = sum(trimmed_times) // len(trimmed_times)
+            thread_object.average = str(mean)
+
+            average = f"{thread_object.average[:-2]}.{thread_object.average[-2:]}"
+
         
 
-
-
+        formatted_results = ["DNF" if solve == -1 else f"{str(solve)[:-2]}.{str(solve)[-2:]}" for solve in thread_object.results]
 
         embed = nextcord.Embed(title=f"{thread_object.event_id} - {thread_object.round_type} round")
-        embed.add_field(name="Solves", value = "\n".join(str(solve) for solve in thread_object.results))
-        embed.add_field(name="Average", value=str(average/100))
+        embed.add_field(name="Solves", value = "\n".join(str(solve) for solve in formatted_results))
+        embed.add_field(name="Average", value=str(average))
         await thread.send(embed=embed, view=ConfirmModalView())
 
     else:
@@ -244,5 +274,4 @@ If you get DNF, input "DNF" without the quotes in the time submission field.""")
                                 (scrambles_df['scramble_num'].astype(str) == str(thread_object.scramble_num)) &
                                 (scrambles_df['round_type'].astype(str) == str(thread_object.round_type))].iloc[0]['scramble']
 
-        
         await thread.send(f"**Scramble {thread_object.scramble_num}:**\n{scramble}", view=SubmitModalView())

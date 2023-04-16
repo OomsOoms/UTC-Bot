@@ -9,12 +9,12 @@ from .submit import SubmitModalView, ConfirmModalView
 def cmds(bot):
     # Add the commands to the bot
     init_event_selector(bot)
-    init_results_selector(bot)
-    init_day_selector(bot)
+    #init_results_selector(bot)
+    #init_day_selector(bot)
 
 def views(bot):
     # Add the views to the bot
     bot.add_view(EventSelectorView(bot))
-    bot.add_view(ResultSelectorView())
+    #bot.add_view(ResultSelectorView())
     bot.add_view(SubmitModalView())
     bot.add_view(ConfirmModalView())

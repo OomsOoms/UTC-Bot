@@ -68,22 +68,29 @@ class EventSelectorView(nextcord.ui.View):
             # Call the submit function to handle the submission process
             await submit(thread, event_name=event_name, event_id=event_id, interaction=interaction)
 
+# Define the check function
+def is_admin(ctx):
+    return ctx.author.guild_permissions.administrator
 
 def init_event_selector(bot):
     @bot.slash_command(name="event-selector", description="Creates a private thread for the user who clicks the button in the dropdown")
     async def event_selector(ctx):
-        # Create an Embed object with information about the competition
-        embed = Embed(title="Cubing Competition Information", color=0xffa500)
-        embed.add_field(name="Event Selection", value="Select an event from the dropdown menu. Note that the events will change every day for each new round, so please check the dropdown menu regularly to see what events are available.")
-        embed.add_field(name="Solve Submission",value="To submit your solves, please go to the private channel named `submit [event name]`, which will appear once you select an event. The scrambles for each solve will be revealed after you submit your previous solve in the same channel.")
-        embed.add_field(name="Penalties", value="If you need to add a penalty to a solve, you can do so by using the penalty buttons located under each scramble in the private channel.")
-        embed.add_field(name="Results", value="Results will be available after each round.")
-        embed.add_field(name="Good Luck!", value="Have fun competing! If you have any questions, feel free to ask in the designated discussion channel.")
+        if not ctx.user.guild_permissions.administrator:
+            await ctx.response.send_message("You are not authorized to run this command.", ephemeral=True)
+        else:
+            #do your admin command here
+            # Create an Embed object with information about the competition
+            embed = Embed(title="Cubing Competition Information", color=0xffa500)
+            embed.add_field(name="Event Selection", value="Select an event from the dropdown menu. Note that the events will change every day for each new round, so please check the dropdown menu regularly to see what events are available.")
+            embed.add_field(name="Solve Submission",value="To submit your solves, please go to the private channel named `submit [event name]`, which will appear once you select an event. The scrambles for each solve will be revealed after you submit your previous solve in the same channel.")
+            embed.add_field(name="Penalties", value="If you need to add a penalty to a solve, you can do so by using the penalty buttons located under each scramble in the private channel.")
+            embed.add_field(name="Results", value="Results will be available after each round.")
+            embed.add_field(name="Good Luck!", value="Have fun competing! If you have any questions, feel free to ask in the designated discussion channel.")
 
-        # Send the embed to a channel or user
-        msg = await ctx.send(embed=embed, view=EventSelectorView())
+            # Send the embed to a channel or user
+            msg = await ctx.send(embed=embed, view=EventSelectorView(bot))
 
-        msg = await msg.fetch()
+            msg = await msg.fetch()
 
-        with open('data/Messages.tsv', "a") as messages:
-            messages.write(f"{ctx.channel.id}\t{msg.id}\n")
+            with open('data/Messages.tsv', "a") as messages:
+                messages.write(f"{ctx.channel.id}\t{msg.id}\n")
