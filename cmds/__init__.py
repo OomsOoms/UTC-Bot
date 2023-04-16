@@ -14,7 +14,7 @@ def cmds(bot):
 
 def views(bot):
     # Add the views to the bot
-    bot.add_view(EventSelectorView())
+    bot.add_view(EventSelectorView(bot))
     bot.add_view(ResultSelectorView())
     bot.add_view(SubmitModalView())
     bot.add_view(ConfirmModalView())

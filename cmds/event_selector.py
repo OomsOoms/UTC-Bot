@@ -10,8 +10,9 @@ schedules_df = pd.read_csv("data/Schedules.tsv", sep="\t")
 events_df = pd.read_csv("data/Events.tsv", sep="\t")
 
 class EventSelectorView(nextcord.ui.View):
-    def __init__(self):
+    def __init__(self, bot):
         super().__init__(timeout=None)
+        self.bot = bot
 
 
     # Find the active competition
@@ -45,13 +46,17 @@ class EventSelectorView(nextcord.ui.View):
             user_submit = pickle.load(f)
 
         # Check if the select data matches any thread object
-        for thread_obj in user_submit.thread_list.values():
-            if (thread_obj.user_id == interaction.user.id and
-                thread_obj.event_id == event_id and
-                thread_obj.competition_id == competitions_df[competitions_df["active_day"] != 0].iloc[0]["competition_id"]):
+        for thread_object in user_submit.thread_list.values():
+            if (thread_object.user_id == interaction.user.id and
+                thread_object.event_id == event_id and
+                thread_object.competition_id == competitions_df[competitions_df["active_day"] != 0].iloc[0]["competition_id"]):
                 # Match found, do something with the thread object
-                await interaction.send("You have already submitted this event!", ephemeral=True)
-
+                thread = self.bot.get_channel(thread_object.thread_id)
+                if thread is None:
+                    await interaction.send("You have already submitted this event!", ephemeral=True)
+                else:
+                    await interaction.send(f"You already have a thread for this event! https://discord.com/channels/{thread_object.guild_id}/{thread_object.thread_id}", ephemeral=True)
+                
                 break
         else:
             # Create a new private thread
