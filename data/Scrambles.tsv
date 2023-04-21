@@ -22,3 +22,199 @@ scramble_id	competition_id	event_id	scramble_num	round_type	scramble
 18	CubePlaceTest	clock	3	f	UR2- DR1- DL1- UL0+ U1- R4+ D4+ L3+ ALL2+ y2 U3- R4- D6+ L4- ALL2- UR DL
 19	CubePlaceTest	clock	4	f	UR0+ DR1+ DL0+ UL2- U2- R2+ D3+ L2- ALL3+ y2 U4+ R5+ D3- L1+ ALL5+ UR UL
 20	CubePlaceTest	clock	5	f	UR1+ DR2+ DL4- UL5+ U1- R6+ D5+ L4+ ALL5- y2 U4- R4+ D1+ L0+ ALL2+ DL
+
+20	DCC	777	1	f	3Fw' Uw2 Rw' 3Bw' Rw2 Fw2 3Bw2 Dw2 3Dw' 3Bw2 3Fw Uw 3Uw 3Lw2 Lw' 3Bw B 3Dw Uw2 Lw 3Uw' Lw' B' D' 3Dw Rw2 F D' Rw' Uw Bw' Lw' D Bw' Rw2 R2 Fw Dw' R' L2 B U' 3Lw' 3Uw2 3Rw L D2 R2 L Uw Rw 3Lw Fw' 3Rw' U2 3Lw2 L2 Bw L2 R 3Uw' Lw Fw' R' 3Dw' U Dw2 L' Bw2 3Rw' 3Uw' B 3Bw' 3Fw' Dw2 3Dw' Rw2 Uw' F 3Lw2 3Fw' U2 3Fw' F2 3Uw2 3Rw' Lw 3Fw2 3Lw' Rw2 Bw2 3Fw2 Rw2 D2 B' L' 3Lw' Dw 3Lw' 3Bw
+20	DCC	777	2	f	D' F2 U2 Rw U 3Dw Lw2 Fw2 Rw 3Bw2 Rw Bw' Rw2 3Rw D R2 U2 Dw' F' U 3Rw' R2 U2 D' B2 3Lw' B' R' U2 Rw' D' U L' 3Rw' F Lw 3Bw2 F2 R2 3Lw2 3Uw 3Bw Fw2 Bw2 3Rw2 U' 3Rw2 Uw Fw L' Fw L 3Bw2 Bw' L 3Rw 3Dw2 D R L' 3Fw Uw 3Dw2 B' 3Lw2 F2 R' Lw2 3Lw2 3Dw' 3Lw2 3Fw' U2 R' 3Bw2 3Uw Uw' U 3Dw 3Bw U2 L B' 3Fw 3Lw' Uw' Dw Lw' 3Fw2 3Bw D B2 Dw' 3Dw2 3Uw Rw 3Dw 3Uw' Lw2 D
+20	DCC	777	3	f	3Bw' D2 3Fw' 3Dw' Uw B2 Fw2 3Dw2 Rw2 B Rw2 U D' R' Rw F' Bw' 3Rw' Bw2 D' R Lw' Fw D' 3Lw B 3Uw2 U' Lw' 3Dw' U' L 3Bw Uw2 3Uw2 Fw 3Dw' Dw B2 3Fw' 3Dw Uw Dw' U2 Rw Fw 3Rw2 3Fw2 Rw2 Dw Lw' 3Rw2 L' F2 Rw' 3Lw 3Rw' U2 D2 Fw' Lw2 Fw 3Uw 3Bw2 Fw2 3Fw 3Uw B' Rw2 3Bw2 D' 3Uw2 R' 3Bw' L D Dw' 3Lw 3Fw2 F2 U 3Uw D2 3Bw2 3Rw2 B2 3Fw2 F 3Bw Bw' 3Dw2 3Uw' Lw' 3Bw2 U' 3Lw2 F' Rw2 D B'
+20	DCC	777	4	f	Rw' U2 D Dw Lw2 3Bw L F2 Bw Fw' Dw2 L 3Rw' U Fw 3Lw' 3Fw 3Bw2 Fw2 Rw2 D2 3Bw U D' Rw2 3Rw D Uw Bw2 Fw' Dw2 Rw Lw 3Dw Dw' R2 D2 3Bw' D Uw' L' 3Dw' D2 Rw' B' 3Bw' Lw 3Dw' D 3Fw' Bw Uw B' Uw Dw' 3Rw2 B2 Uw2 3Fw Uw' 3Lw Uw R' Fw2 F2 R' Bw 3Rw' Fw2 3Bw' Uw2 3Rw2 L Dw2 3Bw U' 3Uw' 3Fw Dw2 Lw U2 3Bw F L 3Rw Dw2 3Bw' R Bw' Dw2 D U 3Lw Uw Dw' 3Uw2 D2 3Bw2 F 3Lw
+20	DCC	777	5	f	3Lw2 B Dw D' B R Uw2 U B' Lw2 L' 3Rw Dw 3Lw2 3Bw2 F2 3Fw 3Uw2 R 3Fw 3Rw L 3Dw' D 3Bw2 D2 L2 3Rw' Lw2 R F' Dw2 Uw 3Fw2 Rw2 3Fw2 Dw' F' Lw' U2 F 3Lw2 F Lw2 3Dw' Lw' U2 3Dw2 3Bw2 Dw' 3Rw' F B2 3Uw2 Dw 3Rw' 3Fw' D' 3Fw' R Dw' 3Uw' Rw2 R2 3Lw2 3Rw 3Fw2 Lw 3Lw Bw2 Dw 3Fw' 3Bw' Bw Fw' Uw2 Bw' F' 3Bw' 3Fw' 3Lw' 3Uw2 Lw2 F2 3Bw' B2 Lw' 3Bw2 Bw2 U2 Uw2 3Bw2 Lw2 F' Dw' 3Lw' L D 3Uw Fw
+
+20	DCC	222	1	1	R' U2 R U' R F U2 R2 F2
+20	DCC	222	2	1	U' F R' F U' F U2 R' U
+20	DCC	222	3	1	R2 F R' F2 U F2 R' F' R
+20	DCC	222	4	1	U2 F2 R F' U' F R' U2 F
+20	DCC	222	5	1	F U' F R2 U' R U F2 U2 R'
+
+20	DCC	333mbf	1	f	L R2 D' B2 U F2 R2 D2 R2 D2 U' B2 R2 B' L' B L2 F' L R D2
+20	DCC	333mbf	2	f	D' R' F2 D2 U2 L' R' F2 U2 R' B2 F2 R' F D2 U' F' D' B2 L
+20	DCC	333mbf	3	f	L2 D F D2 B R2 F U2 B' R2 U2 B' F' L' B2 R2 D F R' D U'
+
+20	DCC	2-4	1	1	**2x2:** R2 F' R' F R' F R2 F U2                                                                  **3x3:** U' B2 R2 U R2 U' L2 U2 B2 F2 L' U B F' U2 L2 U R U2 R                                                                   **4x4:** U2 R2 U2 B2 D2 U2 R B2 L F2 R' B' R2 U' R2 U2 F' D2 U2 R Uw2 B Fw2 Rw2 F' D2 L2 Uw2 F' D2 R L' Uw F2 B' Uw R' Rw' F2 Uw' F Rw' Fw Rw2 D
+
+20	DCC	333oh	1	1	R' L2 B R2 F L2 B R2 D2 F' L2 F' L' U R U' F U F R
+20	DCC	333oh	2	1	R' D F B' R B U F2 D L R2 F U2 D2 B R2 F' L2 D2 B
+20	DCC	333oh	3	1	U' L2 D L2 U' L2 F2 U2 R2 B2 R F' U2 L U' B D' R' D'
+20	DCC	333oh	4	1	F2 U2 R B2 L B R2 D' L F U2 B2 R2 F' D2 R2 L2 F2 D2 R2
+20	DCC	333oh	5	1	D' R2 F2 U R2 D' B2 U2 R2 B2 R2 D B' D R D2 U' B2 U' F' R
+
+20	DCC	333fm	1	f	U D2 L' F' R' F U B F2 R2 D2 R2 L2 U F2 D' R2 U' F2 U'
+20	DCC	333fm	2	f	U D2 L' F' R' F U B F2 R2 D2 R2 L2 U F2 D' R2 U' F2 U'
+20	DCC	333fm	3	f	U D2 L' F' R' F U B F2 R2 D2 R2 L2 U F2 D' R2 U' F2 U'
+20	DCC	333fm	4	f	U D2 L' F' R' F U B F2 R2 D2 R2 L2 U F2 D' R2 U' F2 U'
+20	DCC	333fm	5	f	U D2 L' F' R' F U B F2 R2 D2 R2 L2 U F2 D' R2 U' F2 U'
+
+20	DCC	333	1	1	R B' F2 D F2 R2 D R2 F2 U R2 B2 U L U L2 R F' D B U'
+20	DCC	333	2	1	U' R2 D R2 U' R2 D2 U' R2 U' L2 R' B' L F' L2 U F D B' U'
+20	DCC	333	3	1	R' U2 L2 B2 F2 D2 F2 L' F2 R2 F2 D2 F' L U' R2 U2 R F U' F
+20	DCC	333	4	1	F2 U B D2 F' R' U R2 D2 F L2 F' L2 D2 F' D2 R2 L2 B' U'
+20	DCC	333	5	1	R2 U B2 U F2 U' L2 R2 U' R2 F' D' L F R' B R' U R D
+
+20	DCC	222oh	1	1	F R2 U' F2 U' F2 U2 R2 U'
+20	DCC	222oh	2	1	F R2 F' R' F U R2 U R'
+20	DCC	222oh	3	1	F2 U2 R' U R F2 U' F R2
+20	DCC	222oh	4	1	U' F2 R2 U2 R' F R U F2
+20	DCC	222oh	5	1	U R F' R2 U R' F2 U2 R2
+
+20	DCC	444bf	1	f	U' R' U2 R2 D F2 D2 L2 U' B2 L2 U B R' F' D R' U' F' D Fw2 L B2 L2 Uw2 Rw2 B Fw2 L2 B2 D' Uw2 R' F' Uw' L U' Fw' Rw2 Fw2 D2 B' L Uw
+20	DCC	444bf	2	f	U' D' L B L U' L' B2 L2 D L2 U L2 U' R2 L2 F2 D' F' U Rw2 D' Uw2 B2 L F2 U R' Rw2 U D2 L2 Fw R2 U Fw' L' Uw2 Rw' Fw' D' F U' L2 Rw
+20	DCC	444bf	3	f	D R2 D2 B2 D B2 D F2 R2 U B2 R' F R' D B' F U' L F2 Rw2 U Rw2 D' F2 B Fw2 Uw2 L2 F' D F' Rw U' Rw2 B2 Uw L2 Fw R Uw R' U2 B2
+
+20	DCC	555	1	1	Bw2 D U' Uw' Lw2 Fw F2 U' Fw' F D Bw B2 R D2 R2 U2 Bw' L Uw' Bw' Rw2 Lw2 Bw' Lw2 Rw Fw' B R U' B Fw2 Uw B Dw2 Bw2 U' Fw' D Bw' R' B' L Dw Uw2 F R Fw' B' Rw2 Bw' L Rw' Bw' Fw B Uw' Bw2 D2 B2
+20	DCC	555	2	1	Bw' Lw Bw F Rw2 F' U' R' D' L' R' Bw U2 L' Uw Bw' Fw Lw Dw Rw Fw' B Rw F Lw2 R Rw2 Fw2 U2 Lw' Dw2 Fw' Uw' Lw' D' F' D Uw Lw' F' R B2 Rw' R2 U2 Lw2 L2 B2 Fw' U' Fw' R2 Lw2 D' U' R2 F Rw' Bw2 Uw'
+20	DCC	555	3	1	Dw L2 Dw2 Uw2 F2 Fw Dw2 U2 F' Lw' Fw' U Dw2 F2 Rw2 Lw' Dw Lw R2 D R2 U Lw' R2 U2 Fw' R' Rw2 U Dw' Rw2 R' D2 Bw R2 Uw2 Fw2 Uw' B' Dw B' Rw2 Bw U Lw2 Dw2 Bw' Fw' D' U R Fw Lw2 B2 U Fw2 B' R' F2 Fw'
+20	DCC	555	4	1	Uw R Lw' U2 B2 L Lw Rw2 Uw2 B2 Dw2 B R Dw2 Uw Lw' R D2 Lw' Uw' Dw' U' R2 Dw2 Bw' Dw F2 Lw2 Fw2 Bw R2 Uw' L' Bw' U2 D Uw2 Lw' Rw Bw' Uw2 D2 Dw' R' D' F2 B' Lw' Uw2 Bw' D' F L Rw' Lw Dw R2 Bw' F Dw2
+20	DCC	555	5	1	D L2 D2 F' D' U R2 L Fw Bw' Dw2 B' Fw' Rw2 F2 Bw2 R D2 R Uw Lw R' F R L2 Bw Lw' Uw' Rw2 Uw2 Rw2 L Fw' R2 Lw F' Lw' Dw' Bw B2 F2 Dw' Fw' Bw2 Lw2 Rw Dw2 B' Fw2 Dw L' Fw2 L U' Fw' Dw' B Dw Bw' L'
+
+20	DCC	sq1	1	1	 (0,-4)/ (-5,1)/ (2,-4)/ (6,-3)/ (0,-3)/ (3,0)/ (0,-5)/ (0,-3)/ (4,-3)/ (0,-4)/ (4,-3)/ (-5,0)/ (-2,0)/
+20	DCC	sq1	2	1	 (-5,0)/ (3,3)/ (-1,5)/ (3,-3)/ (0,-3)/ (0,-2)/ (-3,-3)/ (0,-5)/ (4,0)/ (4,-1)/ (2,0)/ (0,-5)/
+20	DCC	sq1	3	1	 (0,2)/ (1,1)/ (3,-3)/ (0,-3)/ (5,-4)/ (3,0)/ (1,0)/ (-3,0)/ (-1,-2)/ (4,-3)/ (6,-5)/ (-2,-4)/
+20	DCC	sq1	4	1	 (-3,-4)/ (1,1)/ (-3,0)/ (3,-3)/ (-1,-1)/ (0,-2)/ (0,-3)/ (3,0)/ (5,-5)/ (0,-4)/ (-3,0)/ (6,-2)/
+20	DCC	sq1	5	1	 (0,5)/ (0,-3)/ (-3,0)/ (4,-5)/ (5,-4)/ (3,0)/ (4,0)/ (-3,-3)/ (-5,0)/ (2,-2)/ (-2,-5)/
+
+20	DCC	666	1	f	D R Dw D2 3Uw Rw Lw2 B Lw Uw2 U 3Rw' Dw2 Fw Rw U2 L U Bw2 3Fw2 Fw' F2 Dw 3Fw Dw F' Lw' Dw R Bw' 3Uw Rw U Fw2 B' 3Uw' Rw' Fw' 3Fw Uw Fw Dw' Fw' Lw' 3Rw' B Uw F2 U2 L2 D Fw2 Rw B2 F D L' R2 Uw2 R F Dw' U 3Fw2 Fw2 L2 R' B Lw' L' 3Uw' Fw 3Fw B2 Bw Dw U 3Uw F' 3Rw'
+20	DCC	666	2	f	3Uw U' Lw2 F' L R2 Lw2 Fw 3Fw' D B Lw 3Fw2 D' B' Dw' B2 3Rw' D' Dw' Rw U2 D2 3Rw Fw' F Lw F' Lw2 U' R Fw R' Fw D Dw2 Uw2 3Rw Bw B Uw' Dw' Bw2 3Rw' Dw2 U' Rw' Uw2 3Uw' F R2 Dw R' 3Rw2 Bw2 Fw 3Fw' R' L2 Rw2 3Fw2 3Rw Bw' Fw2 3Rw Uw2 U F Uw' F' Uw Lw' D2 Uw2 Lw2 B' U2 Dw 3Rw2 L
+20	DCC	666	3	f	F' U2 Fw' R 3Uw Dw D2 L Dw Lw F' L2 B 3Fw Rw' D' L D' Dw2 Rw' B' 3Fw' Rw' L2 D2 U' L Dw' 3Fw2 L' Bw2 Rw 3Fw2 B' L' Lw2 F Lw 3Rw2 L' F' R2 3Fw2 Lw' Uw2 Fw2 L 3Rw 3Fw' R' Dw 3Uw2 3Rw 3Fw' D2 3Rw' 3Uw2 U Bw2 R Fw' Uw2 B2 Uw' B Lw' F D Fw' B' Uw 3Fw' B 3Uw' Uw2 F2 3Fw2 R' 3Uw2 F
+20	DCC	666	4	f	U2 3Uw' R' U2 L' R D Rw2 D2 L' Bw2 F' R' L Uw' 3Rw2 3Fw2 D 3Rw' B R 3Uw2 Rw2 3Fw Uw2 3Rw' 3Fw' Rw' U2 Dw 3Rw' B' Rw' D' Lw2 R B' Fw Dw' 3Uw2 R2 Bw' 3Rw2 U' 3Rw Uw2 3Rw2 Dw Fw R2 Uw Rw' L' U' 3Uw2 Uw R' F2 U' R Bw2 Fw 3Fw2 Rw2 F R Lw 3Rw' U' 3Fw F' 3Uw B F' Lw 3Rw 3Fw2 F B' Dw'
+20	DCC	666	5	f	3Rw' 3Fw R' Fw Rw' L2 Fw2 D2 L' 3Fw Bw2 U B2 Dw Uw' R' Lw2 Bw2 Lw D 3Uw' Dw' L' 3Fw2 R2 Uw Lw B D' Dw 3Fw U2 B' Lw Dw U2 D Uw 3Uw' B2 3Fw L 3Uw' Bw2 R Fw2 3Fw2 Lw B2 Bw' 3Rw2 3Uw' Fw2 R L 3Rw F' Dw Lw' Uw B' Lw' F2 B 3Fw' L' Bw' Rw2 3Rw 3Fw2 3Uw 3Rw' L' 3Uw' Dw 3Rw Rw2 3Uw Bw Uw2
+
+20	DCC	pyram	1	1	L' R' B' R U' B' R U' R' l r' b u
+20	DCC	pyram	2	1	R' B R U B R U' R l r b' u
+20	DCC	pyram	3	1	L B' L' B' U' B' R' U l' u'
+20	DCC	pyram	4	1	R L U R L' B' R U' l' r b
+20	DCC	pyram	5	1	R' B L R' B' R U' B' l' b'
+
+20	DCC	222	1	2	R' F U R' F2 U R2 U' F2 U'
+20	DCC	222	2	2	F U2 R' F' R2 F R' U2 R'
+20	DCC	222	3	2	U' R F' U R' U2 F R2 F
+20	DCC	222	4	2	R' U2 F R2 F' R2 F R2 U'
+20	DCC	222	5	2	R F' R F2 U2 R F' U F'
+
+20	DCC	skewb	1	1	B' U R U R' L' U' L' U'
+20	DCC	skewb	2	1	L' U B L U' R L U B
+20	DCC	skewb	3	1	U' R L' R' B R B' L U
+20	DCC	skewb	4	1	R B' U' L' R' B' U B R'
+20	DCC	skewb	5	1	R B' U B' L U B R
+
+20	DCC	333bf	1	1	D' R' B R2 F2 U2 R2 D2 L2 F2 R2 F2 U' R B2 F D L F D'
+20	DCC	333bf	2	1	D' R' L U2 R D2 F' U R D2 R2 D2 B2 U2 F2 U' R2 U L2
+20	DCC	333bf	3	1	D2 F2 D2 L' D2 L' B2 F2 L R' B2 F D L R2 D2 B F2 U2 L
+
+20	DCC	555bf	1	f	F' U' D Rw2 R' Dw' L' B' Bw' Lw' R' D' L2 B F2 D2 F2 Lw U2 Rw Bw2 F2 Dw Fw' Dw B2 Lw L Uw2 Bw Rw2 R Fw' U2 R' Uw' B' L2 B U' D' Fw' U2 Uw' Lw D' B Lw Uw U' Dw2 Bw' Lw R2 U' Lw' U R Rw' B'
+20	DCC	555bf	2	f	U2 L U' Fw L Dw B2 F' L' Fw' Bw D Uw Lw2 B Lw' Fw' F2 Uw Dw Bw Lw U2 Lw2 R2 U2 Fw2 Bw L2 U' L' Bw Uw Lw' D2 Uw F2 Rw2 B2 U R F' Rw2 Bw2 U R2 Dw2 Lw' Uw D2 Rw2 D2 L2 Rw R' Bw2 L2 R Uw2 D2
+20	DCC	555bf	3	f	Rw' D' U2 Dw' F' Fw' Uw2 Fw2 F' Bw R U2 Bw Lw D2 Rw B2 L2 Uw L Lw B2 U2 Dw2 Uw' Rw Dw2 L2 R D2 L' Uw2 Bw' D U' R2 U' Fw Dw L' Bw Rw2 Fw2 Rw L2 Lw' Uw F2 Lw2 B' Fw2 Dw2 Fw U' R2 B' Dw' R' Bw2 Rw2
+
+20	DCC	444	1	1	U2 B' U2 R2 D2 B2 R F2 D2 L B2 D2 R' B2 U' R2 B' R2 D' R2 U' Uw2 F' Fw2 Rw2 B' U Uw2 Rw2 D2 B2 U Fw2 U2 L' Rw' B L F' U Uw' Fw' Rw' F Uw' B' D2
+20	DCC	444	2	1	U R2 U2 R2 F' R2 U2 B' F2 L2 B2 L B2 U' L2 U L2 B R' Uw2 B U2 B' Rw2 F Rw2 Fw2 R' B D2 B L Uw F' Uw2 L' Fw2 U2 F Rw U Rw Fw' R
+20	DCC	444	3	1	R F L U' L2 B' U' L U' F2 R2 U2 B R2 D2 F U2 B U2 B L2 Fw2 D' L U2 Uw2 B2 R B2 Uw2 L' Uw2 R' F' Rw2 D Fw' U Rw2 U' Rw Fw Rw' F' R Fw2
+20	DCC	444	4	1	L' D2 F' D2 F2 L2 R2 U F2 U B2 D R2 B2 F' D R' D2 B2 F U' Uw2 R Uw2 Rw2 U D2 L' F2 B2 D' Fw2 L2 F2 Fw' Rw2 Uw2 L' F Uw2 R D Rw D2 Uw' Rw'
+20	DCC	444	5	1	R2 B R L F U B' R2 L D2 B2 D2 R U2 R' B2 R' F Uw2 Rw2 U' B2 U R2 D' B Fw2 U' B Fw2 D Rw F2 B' Rw2 D B' Uw2 Fw' U R Fw2 Uw Rw
+
+20	DCC	333	1	2	B D' R D L2 U2 B' D' B' F2 D' L2 F2 B2 D' B2 U' F2 D'
+20	DCC	333	2	2	B' R U2 R2 D' U' B2 D' B2 R2 U L2 U' F L' B' U2 B' U2 L
+20	DCC	333	3	2	R F' D U L2 B2 U' R2 F2 R2 F2 U L' U2 F2 D' L R F R2
+20	DCC	333	4	2	F U2 L' D2 F2 R' D2 L D2 R2 F2 D2 U' F R B F D' B
+20	DCC	333	5	2	R' U' R D' L' B' U F U2 B2 R2 L2 D' B2 D2 R2 F2 B2 R2 B2
+
+20	DCC	clock	1	f	UR1+ DR3+ DL4+ UL2+ U5- R6+ D6+ L1+ ALL3- y2 U4- R1- D1- L5- ALL3+ DR DL UL
+20	DCC	clock	2	f	UR5- DR5+ DL1- UL4+ U0+ R2+ D0+ L2+ ALL5- y2 U2+ R3+ D6+ L0+ ALL4- UR DL UL
+20	DCC	clock	3	f	UR1+ DR2- DL1+ UL1- U5+ R1+ D0+ L2- ALL3- y2 U5+ R6+ D0+ L3+ ALL4+ DR UL
+20	DCC	clock	4	f	UR2- DR4+ DL6+ UL2- U4+ R5- D4- L2+ ALL4+ y2 U2+ R2+ D4- L4- ALL2- UL
+20	DCC	clock	5	f	UR0+ DR1- DL0+ UL4+ U6+ R1- D2- L4+ ALL0+ y2 U3- R3+ D6+ L4+ ALL3- DR UL
+
+20	DCC	minx	1	f	  R++ D++ R-- D++ R-- D++ R++ D++ R++ D++ U R++ D-- R++ D++ R++ D++ R++ D++ R++ D-- U' R++ D++ R-- D-- R-- D-- R++ D-- R-- D-- U' R-- D-- R++ D-- R++ D-- R++ D++ R++ D++ U  R++ D++ R-- D++ R++ D-- R++ D++ R-- D++ U  R++ D++ R++ D-- R-- D++ R-- D++ R++ D-- U' R++ D++ R-- D-- R-- D-- R++ D-- R++ D-- U' 
+20	DCC	minx	2	f	  R++ D++ R++ D-- R++ D++ R++ D++ R++ D++ U R++ D-- R++ D-- R-- D++ R++ D-- R-- D-- U' R-- D++ R-- D-- R++ D-- R++ D-- R-- D-- U' R++ D++ R++ D++ R-- D++ R++ D++ R++ D++ U  R++ D++ R-- D-- R++ D-- R-- D++ R-- D-- U' R-- D++ R-- D-- R++ D++ R++ D-- R-- D++ U  R-- D++ R-- D-- R++ D-- R-- D++ R-- D++ U  
+20	DCC	minx	3	f	  R++ D-- R-- D-- R-- D-- R-- D++ R-- D++ U R++ D-- R-- D++ R++ D++ R++ D-- R-- D++ U  R-- D-- R-- D++ R-- D++ R++ D-- R-- D-- U' R++ D-- R++ D++ R-- D-- R-- D++ R-- D-- U' R++ D++ R-- D++ R++ D++ R-- D-- R++ D-- U' R-- D-- R++ D++ R-- D-- R-- D-- R-- D++ U  R++ D-- R-- D-- R++ D-- R++ D++ R-- D-- U' 
+20	DCC	minx	4	f	  R-- D-- R-- D++ R-- D-- R-- D++ R++ D++ U R++ D++ R-- D-- R++ D-- R++ D-- R++ D-- U' R-- D++ R++ D-- R-- D-- R-- D++ R++ D-- U' R++ D-- R-- D-- R++ D++ R++ D-- R++ D-- U' R-- D++ R-- D++ R-- D++ R++ D++ R-- D-- U' R-- D++ R-- D-- R-- D++ R-- D-- R++ D-- U' R++ D-- R-- D++ R++ D++ R-- D++ R++ D-- U' 
+20	DCC	minx	5	f	  R++ D-- R++ D++ R++ D++ R++ D++ R-- D++ U R-- D-- R++ D++ R-- D-- R++ D-- R++ D-- U' R-- D++ R-- D++ R-- D-- R++ D-- R++ D-- U' R++ D-- R++ D++ R-- D++ R++ D-- R-- D++ U  R++ D-- R++ D-- R-- D-- R++ D-- R-- D++ U  R-- D-- R-- D-- R-- D++ R++ D-- R++ D-- U' R++ D-- R++ D-- R-- D-- R-- D++ R-- D-- U' 
+
+20	DCC	2-4	1	f	**2x2:** U R' U2 F' R' U' F2 R F2                                                                   **3x3:** U' L U' L2 B2 R D' R2 B R2 B' L2 U2 L2 B2 R2 F D R2                                                                   **4x4:** U' L2 U2 B2 U' L2 F2 U' L2 U R2 B D' U' L' F' R U2 F D2 L Uw2 Rw2 B Rw2 F D Fw2 Uw2 B D F L2 Rw' B2 D' F D Uw' Rw Fw2 D2 Uw2 R2 F2 L2
+
+20	DCC	222bf	1	f	F' U' R' F R' U2 R' F2 R2
+20	DCC	222bf	2	f	F' U' F2 R' U R F2 U' F
+20	DCC	222bf	3	f	F U' R2 U R' U' F2 U' F2
+
+20	DCC	mirror	1	1	B2 D' R2 F2 D F2 D' B' L' B D2 L2 D B' U' R' F'
+20	DCC	mirror	2	1	F D L2 F U2 F2 B L U F2 L2 U L2 D2 B2 D' R2 U D2 R2
+20	DCC	mirror	3	1	D2 U' F2 R2 F2 U' L2 U F2 U L2 B' D2 L F' U' B2 D B' D' F2
+20	DCC	mirror	4	1	R B' U' D2 B2 D' R' D' U2 B L2 F' R2 D2 B2 R2 L2 U2 B R'
+20	DCC	mirror	5	1	F' D' R2 D' R2 D' B2 D B2 R2 U' B2 F U' L B' L' R2 U2 R'
+
+20	DCC	333bf	1	f	F L' B2 U' F' B U R' B2 U2 R2 B2 L' U2 L B2 L F2 D' R
+20	DCC	333bf	2	f	L' F R' B2 L F2 R' D2 L2 D2 R' D2 B2 R2 F' L2 R D' L F D'
+20	DCC	333bf	3	f	U F2 D' B2 D R2 B2 L2 R' U F' L2 F' L D2 B D2
+
+20	DCC	333oh	1	f	F' U B' L2 D2 L2 R2 F D2 F L2 F' U2 B' U L D R F D R'
+20	DCC	333oh	2	f	R B2 D L D R U F' L2 B2 U D2 L2 B2 D2 L2 B2 D' B' U'
+20	DCC	333oh	3	f	U2 F2 D2 F2 D' R2 U' F2 L2 R2 B' D' R2 B2 L' R' B' L' D L2
+20	DCC	333oh	4	f	D' F R' B2 R' D2 F2 R D2 L2 R' B2 F' U F R F R' U2
+20	DCC	333oh	5	f	R' L U L' U' D' B U' B2 L2 B2 U F2 L2 U L2 D B2 L'
+
+20	DCC	555	1	f	Lw2 Fw' B U2 Fw' R Lw Dw2 Rw2 U Bw' Lw2 Dw U Bw' F' Dw2 Fw2 L' Lw2 Uw R D2 Lw' F2 U F' Fw L2 D Bw Rw2 B2 L' Dw L D2 U2 Uw2 B2 Rw U2 Bw Uw' U' Bw2 R Fw2 Lw' D2 Uw' Rw2 D2 R2 L' D' Dw' R D L2
+20	DCC	555	2	f	D Uw' R' D Bw2 U' L R' F2 Rw L F2 Fw L2 F B2 U Dw' Fw2 F' L R' U2 F Bw D' Fw2 R Lw' Uw B' F Bw L2 Bw2 Rw2 Dw2 Lw Rw2 F2 L2 Dw2 Fw L' Fw Dw' R2 Rw F' Rw' F' Rw2 F2 Fw' B L R U2 Dw Fw
+20	DCC	555	3	f	Lw2 L U' Fw' F' Dw2 Lw Dw Fw' Lw' R2 B2 Fw' Dw' R2 Fw Lw Rw' B2 L2 Uw B' Bw U' Bw F2 Lw2 B' Rw D' Lw2 F' Dw' Bw' F' D B2 Fw' Rw F' D2 R F2 Rw2 Fw' Bw' R' Rw Bw' Fw2 F U' D2 Bw' F2 Uw' U Lw2 Fw Lw'
+20	DCC	555	4	f	Rw' L' Uw Lw' R2 Rw' Bw B Rw2 D' Lw' Fw' D U Uw R Bw2 R L' Rw' Dw2 Uw2 Lw' Dw' Lw2 U' Fw' D Bw2 Rw2 D2 F2 Fw U2 B' Dw R B D' Lw2 Fw2 Lw2 R' Uw2 Lw' L B2 F' Lw2 U' D Fw2 Uw2 U Lw2 Dw2 F2 Rw' Lw D2
+20	DCC	555	5	f	Uw' Lw2 Uw' Fw' L' D2 U R Uw Rw2 R2 Uw Rw2 U2 Rw U F' L' R' Fw2 L' U' F' U Lw' Fw' Dw' L Dw2 R2 Uw L Bw' Rw' L Bw Fw' Rw D' Bw Lw' F2 D Fw' B2 Uw Dw2 R2 Rw' Uw2 Bw2 F2 Fw' Rw2 L Uw2 R2 L' Uw' B2
+
+20	DCC	skewb	1	f	R' L' R B' U R B R' B
+20	DCC	skewb	2	f	R' U' L' B R U' L' R
+20	DCC	skewb	3	f	L B U L' B U R' B L'
+20	DCC	skewb	4	f	U' B' R U B R' L' B'
+20	DCC	skewb	5	f	U L R' U R' B' U R' L'
+
+20	DCC	444	1	f	D' F' R2 D2 B2 D2 F L2 F' D2 B' U2 R2 L' B L2 R B' D' R2 U2 Uw2 L2 Fw2 D F Rw2 F' Fw2 D B D2 F R Rw F R Fw2 Uw' R F Fw2 Rw2 Uw' Rw' F
+20	DCC	444	2	f	U2 B2 D2 L' D2 L R2 B2 U2 B2 D F' U' F2 R' B' R' U2 F2 R' Uw2 B' Rw2 Fw2 U' F Uw2 Rw2 D' Fw2 R2 D' F Rw' U' F U F2 Fw' R Rw2 Uw B' L' F'
+20	DCC	444	3	f	U F L U' D' F U2 B' D2 F2 L2 F2 R2 U B2 U' F2 D2 R2 F2 B Fw2 L D2 B2 R' Fw2 D' Fw2 D Uw2 R2 U2 Rw2 Fw L2 D' F2 Uw2 Fw Uw' Rw2 D' R2 Fw2 R'
+20	DCC	444	4	f	R' U B2 F2 U L2 R2 F2 U' L2 D' B' U2 F2 L U' B' U2 F Fw2 Uw2 L' F R U2 R B' Uw2 L' B' Rw2 Uw F' B2 Rw2 U2 B2 Rw' B' Fw Rw' Uw2 Fw' Rw
+20	DCC	444	5	f	U2 B2 L B2 U2 R D2 L' R2 F2 R' U' R' F2 L B R2 F' U2 L Fw2 U Rw2 B R2 Uw2 B D2 B Fw2 D2 Rw2 D Rw D' B' Rw2 U' Rw Fw' R U Rw Fw U R
+
+20	DCC	222oh	1	f	R2 U R2 F' U R' F R' F'
+20	DCC	222oh	2	f	R2 F' R' F2 U R' F R' U'
+20	DCC	222oh	3	f	U' F U2 F' R2 F R' F U
+20	DCC	222oh	4	f	F U2 F U2 F R F2 R2 F'
+20	DCC	222oh	5	f	U F2 U' F U' R U' F U2 F'
+
+20	DCC	333	1	1	B' R' U' F2 U' L2 D B2 R2 B2 U' F2 U' B D2 R B2 R2 F'
+20	DCC	333	2	1	R' B2 D F B D2 R U2 F U F2 U R2 B2 D2 F2 L2 B2 D' B2 L2
+20	DCC	333	3	1	R2 U B2 D' B2 L2 D2 B2 F2 R2 D2 R D2 F' R' B D' B' U' B2 D2
+20	DCC	333	4	1	B' D' F2 R2 D2 B2 R2 D' U' F2 U R' F R B L' D L' D2
+20	DCC	333	5	1	D R F' U2 L2 F D2 R2 D2 U2 F2 U2 F L2 R D' B D' B2 F' R2
+
+20	DCC	222	1	1	F2 R U' F' U' F2 R F R'
+20	DCC	222	2	1	U' F' R2 U R' U F' U2 R2
+20	DCC	222	3	1	F2 R2 F' R' U F2 R' F' R'
+20	DCC	222	4	1	F' U' F2 U R' U F R F' R'
+20	DCC	222	5	1	R F' R' U2 F U' F' R' F'
+
+20	DCC	pyram	1	1	L R L' R U B' L U l' r b' u
+20	DCC	pyram	2	1	R' B U' B L R' B' R l' r b'
+20	DCC	pyram	3	1	R L B U R' L' R' B' r u'
+20	DCC	pyram	4	1	U R' B L B U R B' l r b' u
+20	DCC	pyram	5	1	B' U B R B' L R' U' b
+
+20	DCC	sq1	1	1	 (0,5)/ (1,1)/ (-3,0)/ (5,-4)/ (-3,-3)/ (0,-3)/ (0,-5)/ (0,-3)/ (4,-1)/ (4,0)/ (-1,-2)/ (6,0)/ (-2,-3)
+20	DCC	sq1	2	1	 (4,0)/ (-4,2)/ (-2,-5)/ (-1,-4)/ (3,-3)/ (-5,-3)/ (-3,-3)/ (-3,-2)/ (-2,0)/ (0,-4)/ (0,-4)/ (-2,0)
+20	DCC	sq1	3	1	 (-2,0)/ (-1,2)/ (-3,0)/ (-5,-2)/ (-3,0)/ (5,-1)/ (0,-5)/ (-3,0)/ (-3,0)/ (5,-3)/ (6,0)/ (-2,0)/ (-2,0)/ (-4,0)
+20	DCC	sq1	4	1	 (-2,6)/ (0,3)/ (-3,0)/ (-1,-4)/ (1,-2)/ (3,0)/ (-4,0)/ (0,-3)/ (0,-3)/ (6,-4)/ (6,0)/ (0,-4)
+20	DCC	sq1	5	1	 (0,2)/ (6,0)/ (-3,0)/ (-3,0)/ (-2,-5)/ (3,-3)/ (-4,-3)/ (3,0)/ (1,-3)/ (0,-1)/ (4,0)/ (0,-2)/ (-4,0)/ (-1,0)
+
+20	DCC	mirror	1	1	F R' U2 F2 L2 D L2 R2 U' B2 U' B2 U' R F R' F' L B' L2
+20	DCC	mirror	2	1	F R2 U2 B2 U2 B2 D' R2 F2 L2 U L D' F' D R2 B U L' U2
+20	DCC	mirror	3	1	B2 D2 F R2 D2 F' U2 B' D2 U2 L2 B U' R F' U2 B' D U F' L
+20	DCC	mirror	4	1	F U B L' B D' F' R2 D L2 F2 L2 U2 B2 U D2 B2 U B2 R F2
+20	DCC	mirror	5	1	F R' D U2 B2 U L2 F2 L2 F2 U L2 U' R D' R B' D' F' R'
+
+20	DCC	vcube	1	1	F2 U2 F L2 U2 F2 U2 F2 L2 F' L D B F' U' B' L2 F2 L F2
+20	DCC	vcube	2	1	L D B2 L2 U' R2 D B2 L2 U2 R2 U B2 L R' B L F D' B2 F2
+20	DCC	vcube	3	1	U D R2 L B2 R' F' R' F2 L' F2 U2 R2 B2 D2 R' B2 L D' B'
+20	DCC	vcube	4	1	D B' L2 U2 L2 D2 F' L2 B' R2 D2 B' F' L D L2 B2 L2 B2 R' F2
+20	DCC	vcube	5	1	U2 L2 B' U2 F' L2 R2 F2 L2 F D2 F' D R2 U R2 B' L D' R

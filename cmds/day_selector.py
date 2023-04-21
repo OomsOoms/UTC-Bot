@@ -21,19 +21,19 @@ def init_day_selector(bot):
         # Send a response message
         await ctx.send(f"Active day has been changed to {day_number}", ephemeral=True)
 
-        messages = pd.read_csv('data/Messages.tsv', sep='\t')
-        for index, row in messages.iterrows():
-            channel = bot.get_channel(int(row["channel_id"]))
-            message = await channel.fetch_message(int(row["message_id"]))
-
-            # Get the select menu component
-            select_menu = message.components[0].components[0]
-
-            # Change the options
-            new_options = [nextcord.SelectOption(label="Option 1", value="option1"), nextcord.SelectOption(label="Option 2", value="option2")]
-            select_menu.options = new_options
-
-            # Update the message
-            await message.edit(components=[nextcord.ActionRow(select_menu)])
+        #messages = pd.read_csv('data/Messages.tsv', sep='\t')
+        #for index, row in messages.iterrows():
+        #    channel = bot.get_channel(int(row["channel_id"]))
+        #    message = await channel.fetch_message(int(row["message_id"]))
+#
+        #    # Get the select menu component
+        #    select_menu = message.components[0].components[0]
+#
+        #    # Change the options
+        #    new_options = [nextcord.SelectOption(label="Option 1", value="option1"), nextcord.SelectOption(label="Option 2", value="option2")]
+        #    select_menu.options = new_options
+#
+        #    # Update the message
+        #    await message.edit(components=[nextcord.ActionRow(select_menu)])
 
 

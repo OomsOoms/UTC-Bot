@@ -5,7 +5,6 @@ from nextcord import Embed
 from .submit import submit
 
 # Load data
-competitions_df = pd.read_csv("data/Competitions.tsv", sep="\t")
 schedules_df = pd.read_csv("data/Schedules.tsv", sep="\t")
 events_df = pd.read_csv("data/Events.tsv", sep="\t")
 
@@ -14,7 +13,7 @@ class EventSelectorView(nextcord.ui.View):
         super().__init__(timeout=None)
         self.bot = bot
 
-
+    competitions_df = pd.read_csv("data/Competitions.tsv", sep="\t")
     # Find the active competition
     active_competition = competitions_df[competitions_df["active_day"] != 0].iloc[0]["competition_id"]
 
@@ -45,11 +44,14 @@ class EventSelectorView(nextcord.ui.View):
         with open("data/user_submit.pickle", "rb") as f:
             user_submit = pickle.load(f)
 
+        competitions_df = pd.read_csv("data/Competitions.tsv", sep="\t")
+
         # Check if the select data matches any thread object
         for thread_object in user_submit.thread_list.values():
             if (thread_object.user_id == interaction.user.id and
                 thread_object.event_id == event_id and
-                thread_object.competition_id == competitions_df[competitions_df["active_day"] != 0].iloc[0]["competition_id"]):
+                thread_object.competition_id == competitions_df[competitions_df["active_day"] != 0].iloc[0]["competition_id"] and
+                thread_object.round_type == thread_object.round_type):
                 # Match found, do something with the thread object
                 thread = self.bot.get_channel(thread_object.thread_id)
                 if thread is None:

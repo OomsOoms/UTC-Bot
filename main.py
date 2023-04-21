@@ -12,6 +12,10 @@ class Bot(commands.Bot):
             __init__.views(bot)
             self.persistent_views_added = True
 
+        await self.change_presence(activity=nextcord.Activity(name="DCC", type=nextcord.ActivityType.competing))
+
+
+
         print(f"Logged in as {self.user} (ID: {self.user.id})")
 
 intents = nextcord.Intents.default()

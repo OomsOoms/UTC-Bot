@@ -30,10 +30,13 @@ class ThreadObject:
         self.results = []
         self.average = None
 
-
+        
         # Find the schedule for the active day of the active competition
         active_day = competitions_df[competitions_df["competition_id"] == self.competition_id].iloc[0]["active_day"]
+        print(active_day)
         active_schedule = schedules_df[(schedules_df["competition_id"] == self.competition_id) & (schedules_df["day_number"] == active_day)]
+
+        print(active_schedule)
 
         # Find the event format/type and solve count
         for idx, row in active_schedule.iterrows():
@@ -41,8 +44,8 @@ class ThreadObject:
             if row_dict["event_id"] == event_id:
                 self.round_type = row_dict["round"]
                 break
-
-    
+                    
+        
         self.format = events_df.loc[events_df['event_id'] == event_id]["format"].values[0]
         self.average_id = events_df.loc[events_df['event_id'] == event_id]["average_id"].values[0]
         self.solve_count = formats_df.loc[formats_df['id'] == self.average_id]["solve_count"].values[0]
@@ -207,7 +210,7 @@ class ConfirmModalView(nextcord.ui.View):
             values_list = "\t".join(str(solve) for solve in thread_object.results)
 
             with open("data/Results.tsv", 'a+') as file:
-                file.write(f"{thread_object.competition_id}\t{thread_object.event_id}\t{thread_object.guild_id}\t{thread_object.user_id}\t{pos}\t{thread_object.round_type}\t{thread_object.average}\t{str(best)}\t{values_list}\n")
+                file.write(f"{thread_object.competition_id}\t{thread_object.event_id}\t{thread_object.user_id}\t{thread_object.guild_id}\t{pos}\t{thread_object.round_type}\t{thread_object.average}\t{str(best)}\t{values_list}\n")
 
             await thread.delete()
 
@@ -240,34 +243,43 @@ If you get DNF, input "DNF" without the quotes in the time submission field.""")
     if thread_object.scramble_num > thread_object.solve_count:
 
         sorted_times = sorted(thread_object.results)
+        max_val = max(thread_object.results)
+        fuckinghelpme = sorted([max_val+1 if t == -1 else t for t in thread_object.results])
 
-        trimmed_times = sorted_times[thread_object.trim[0]:thread_object.solve_count-thread_object.trim[1]]
+        trimmed_times = fuckinghelpme[max(0, thread_object.trim[0]):min(thread_object.solve_count, thread_object.solve_count - thread_object.trim[1])]
+        
 
         count_minus_ones = thread_object.results.count(-1)
 
-        if count_minus_ones == 2:
+        if count_minus_ones > thread_object.trim[1]:
             thread_object.average = -1
             average = "DNF"
         else:
-            mean = sum(trimmed_times) // len(trimmed_times)
+            mean = sum(trimmed_times) // len(trimmed_times) if len(trimmed_times) > 0 else 0
             thread_object.average = str(mean)
 
-            average = f"{thread_object.average[:-2]}.{thread_object.average[-2:]}"
 
-        
+            average = f"{thread_object.average[:-2]}.{thread_object.average[-2:]}" if thread_object.average != -1 else "DNF"
 
         formatted_results = ["DNF" if solve == -1 else f"{str(solve)[:-2]}.{str(solve)[-2:]}" for solve in thread_object.results]
 
-        embed = nextcord.Embed(title=f"{thread_object.event_id} - {thread_object.round_type} round")
+        if thread_object.round_type == 1:
+            round = "First Round"
+        elif thread_object.round_type == 2:
+            round = "First Round"
+        else:
+            round = "Final"
+
+        embed = nextcord.Embed(title=f"{round} round")
         embed.add_field(name="Solves", value = "\n".join(str(solve) for solve in formatted_results))
         embed.add_field(name="Average", value=str(average))
         await thread.send(embed=embed, view=ConfirmModalView())
 
     else:
-        #print(thread_object.competition_id)
-        #print(thread_object.event_id)
-        #print(thread_object.scramble_num)
-        #print(thread_object.round_type)
+        print(thread_object.competition_id, "comp")
+        print(thread_object.event_id, "event")
+        print(thread_object.scramble_num, "scram")
+        print(thread_object.round_type, "round")
         #print(scrambles_df)
         scramble = scrambles_df.loc[(scrambles_df['competition_id'].astype(str) == str(thread_object.competition_id)) &
                                 (scrambles_df['event_id'].astype(str) == str(thread_object.event_id)) &
