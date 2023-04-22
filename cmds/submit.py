@@ -33,10 +33,9 @@ class ThreadObject:
         
         # Find the schedule for the active day of the active competition
         active_day = competitions_df[competitions_df["competition_id"] == self.competition_id].iloc[0]["active_day"]
-        print(active_day)
+
         active_schedule = schedules_df[(schedules_df["competition_id"] == self.competition_id) & (schedules_df["day_number"] == active_day)]
 
-        print(active_schedule)
 
         # Find the event format/type and solve count
         for idx, row in active_schedule.iterrows():
@@ -90,7 +89,13 @@ def get_thread_object(thread, event_id=None, increment=True, interaction=None):
         
     return thread_object
 
-def convert_time(raw_time):
+def convert_time(raw_time, thread_object):
+    if thread_object.event_id == "333mbf":
+        # Extract the "cubes solved" part from the raw time
+        cubes_solved = raw_time.split()[0]
+        raw_time = raw_time.split()[1]
+
+
     try:
         penalty = 2 if "+2" in raw_time else 0
 
@@ -119,8 +124,11 @@ def convert_time(raw_time):
 
         ms = f"{ms}0" if len(ms) == 1 else ms
 
-        return f"{seconds}{ms}"
-    
+        if thread_object.event_id == "333mbf":
+            return f"{cubes_solved} {seconds}{ms}"
+        else:
+            return f"{seconds}{ms}"
+
     except:
         if "dnf" in raw_time.lower():
             return -1
@@ -130,9 +138,11 @@ def convert_time(raw_time):
 
 
 
+
 class EmbedModal(nextcord.ui.Modal):
     def __init__(self, thread_object):
         super().__init__(f"Submit Solve {thread_object.scramble_num}")
+        self.thread_object = thread_object
 
         self.results = nextcord.ui.TextInput(label=f"Scramble {thread_object.scramble_num}", min_length=2, max_length=128, required=True, placeholder=thread_object.format)
         self.add_item(self.results)
@@ -142,8 +152,9 @@ class EmbedModal(nextcord.ui.Modal):
         thread = interaction.channel
         msg = interaction.message
 
-        converted_time = int(convert_time(self.results.value))
+        converted_time = convert_time(self.results.value, self.thread_object)
 
+        
         if converted_time:
             # event_id is only needed on object creation
             await submit(thread, result=converted_time)
@@ -238,16 +249,35 @@ async def submit(thread, event_name=None, event_id=None, result=False, user_id=N
 After submitting your time, the next scramble will automatically appear. Once you've completed the entire average, click the green "SUBMIT" button to submit your average time.
 
 If you get DNF, input "DNF" without the quotes in the time submission field.""")
+        
+        if thread_object.event_id == "vcube":
+            embed.add_field(name=event_name, value="""For virtual cube, you will see no scramble is given. There are a couple ways that we allow you to do virtual cube:
+
+1) Go to https://rubikscu.be/, and scroll down. You should see a virtual cube. You can turn the cube using your mouse. To generate a scramble, please click the scramble button twice. There is no build-in timer, and you will need another stackmat or other timer to time your solve.
+
+2) Go to cstimer.net, set the scramble type to 3x3, and set your timer mode to virtual cube. This cube is turned with special keybinds. If you don't know how to use the cstimer virtual cube, it is highly recommended you use a different virtual cube.
+
+3) If there is another website/app you would like to use, please DM the other website/app you would like to use to ILikeCakes#4393, and he will give you the okay to use it.""")
+            
+        elif thread_object.event_id == "333mbf":
+            embed.add_field(name=event_name, value="""Below, you should see a file with a ton of scrambles. Scramble as many cubes as you are attempting. Remember you have a 10 minute time limit per cube, going up until 1 hour. When submitting your time, you shoulf submit it in the format of `cubes solved / cubes attempted mm:ss`. """)
+
+
         await thread.send(embed=embed)
+
 
     if thread_object.scramble_num > thread_object.solve_count:
 
-        sorted_times = sorted(thread_object.results)
-        max_val = max(thread_object.results)
-        fuckinghelpme = sorted([max_val+1 if t == -1 else t for t in thread_object.results])
+        print(thread_object.results)
+        if thread_object.event_id != "333mbf":
+            thread_object.results = [int(x) for x in thread_object.results]
+            max_val = max(thread_object.results)
+            fuckinghelpme = sorted([max_val+1 if t == -1 else t for t in thread_object.results])
 
-        trimmed_times = fuckinghelpme[max(0, thread_object.trim[0]):min(thread_object.solve_count, thread_object.solve_count - thread_object.trim[1])]
+            trimmed_times = fuckinghelpme[max(0, thread_object.trim[0]):min(thread_object.solve_count, thread_object.solve_count - thread_object.trim[1])]
         
+        else:
+            trimmed_times = thread_object.results
 
         count_minus_ones = thread_object.results.count(-1)
 
@@ -255,11 +285,18 @@ If you get DNF, input "DNF" without the quotes in the time submission field.""")
             thread_object.average = -1
             average = "DNF"
         else:
-            mean = sum(trimmed_times) // len(trimmed_times) if len(trimmed_times) > 0 else 0
-            thread_object.average = str(mean)
+            if thread_object.event_id == "333mbf":
+                average = "N/A"
+
+            else:
+                print(trimmed_times)
+                trimmed_times = [int(time) for time in trimmed_times]
+                mean = sum(trimmed_times) // len(trimmed_times) if len(trimmed_times) > 0 else 0
+    
+                thread_object.average = str(mean)
 
 
-            average = f"{thread_object.average[:-2]}.{thread_object.average[-2:]}" if thread_object.average != -1 else "DNF"
+                average = f"{thread_object.average[:-2]}.{thread_object.average[-2:]}" if thread_object.average != -1 else "DNF"
 
         formatted_results = ["DNF" if solve == -1 else f"{str(solve)[:-2]}.{str(solve)[-2:]}" for solve in thread_object.results]
 
@@ -276,14 +313,22 @@ If you get DNF, input "DNF" without the quotes in the time submission field.""")
         await thread.send(embed=embed, view=ConfirmModalView())
 
     else:
-        print(thread_object.competition_id, "comp")
-        print(thread_object.event_id, "event")
-        print(thread_object.scramble_num, "scram")
-        print(thread_object.round_type, "round")
+        #print(thread_object.competition_id, "comp")
+        #print(thread_object.event_id, "event")
+        #print(thread_object.scramble_num, "scram")
+        #print(thread_object.round_type, "round")
         #print(scrambles_df)
         scramble = scrambles_df.loc[(scrambles_df['competition_id'].astype(str) == str(thread_object.competition_id)) &
                                 (scrambles_df['event_id'].astype(str) == str(thread_object.event_id)) &
                                 (scrambles_df['scramble_num'].astype(str) == str(thread_object.scramble_num)) &
                                 (scrambles_df['round_type'].astype(str) == str(thread_object.round_type))].iloc[0]['scramble']
+        
+        if event_id == "333mbf":
+            with open('333mbf scrambles.txt', 'rb') as file:
+                # Create a File object with the file
+                file = nextcord.File(file)
 
-        await thread.send(f"**Scramble {thread_object.scramble_num}:**\n{scramble}", view=SubmitModalView())
+                # Send the file as an attachment
+                await thread.send(file=file, view=SubmitModalView())
+        else:
+            await thread.send(f"**Scramble {thread_object.scramble_num}:**\n{scramble}", view=SubmitModalView())
