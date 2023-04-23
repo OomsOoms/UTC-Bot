@@ -14,8 +14,6 @@ class Bot(commands.Bot):
 
         await self.change_presence(activity=nextcord.Activity(name="DCC", type=nextcord.ActivityType.competing))
 
-
-
         print(f"Logged in as {self.user} (ID: {self.user.id})")
 
 intents = nextcord.Intents.default()
@@ -26,4 +24,4 @@ bot = Bot(intents=intents)
 __init__.cmds(bot)
 
 # Start the bot by running its event loop with the specified token
-bot.run('OTgyNjEzMTY1MTk4MTU1ODg2.G0yARb.Fbifbsa7ErTA4v1dzeyxWzWGipzRwIEMfLCljk')
+bot.run('MTAyODA2ODkzODQ3NjY5NTU5Mw.G-GYnf.XS9wuLz4w_n4vmQeSeYw6UPYvNQpTFHp_MnzPI')

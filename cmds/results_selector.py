@@ -2,19 +2,27 @@ import nextcord
 import pandas as pd
 from nextcord import Embed
 
-
-results = pd.read_csv('data/Results.tsv', sep='\t')
 competitions = pd.read_csv('data/Competitions.tsv', sep='\t')
 events_data_list = pd.read_csv("data/Events.tsv", sep='\t').to_dict("list")
 
-async def generate_results_embed(bot, event_name, event_results):
+async def generate_results_embed(bot, event_id, event_results, competition_id, round_type):
+
+    schedule = pd.read_csv("data/Schedules.tsv", sep='\t').to_dict("list")
+
+    event_results = event_results.sort_values(by="average")
 
     # Define maximum width for each column
     max_rank_width = 3
     max_user_name_width = 20
     max_guild_name_width = 20
     max_value_width = 8
-    num_highlight = 3
+
+    if str(event_id) == "222":
+        num_highlight = len(event_results)*.75
+    else:
+        num_highlight = 12
+
+    print(num_highlight)
 
     # Define the column headers with left alignment
     header_row = f"{'Rank'.ljust(max_rank_width)} {'User'.ljust(max_user_name_width)} {'Guild Name'.ljust(max_guild_name_width)} {'1'.rjust(max_value_width)} {'2'.rjust(max_value_width)} {'3'.rjust(max_value_width)} {'4'.rjust(max_value_width)} {'5'.rjust(max_value_width)} {'Average'.rjust(max_value_width)} {'Best'.rjust(max_value_width)}"
@@ -80,7 +88,43 @@ async def generate_results_embed(bot, event_name, event_results):
     message = "diff\n" + message + "\n"
 
     return message
+    
 
+
+async def round_dropdown(self, interaction: nextcord.Interaction, event_name, event_id, round_type):
+
+    competition_id = competitions[competitions["active_day"] != 0].iloc[0]["competition_id"]
+
+    results = pd.read_csv('data/Results.tsv', sep='\t')
+
+    try:
+        event_results = results[(results['competition_id'].astype(str) == str(competition_id)) & 
+                                (results['event_id'].astype(str) == str(event_id))] #& 
+                                #(results['round_type'].astype(str) == str(round_type))]
+
+        if not event_results.empty:
+            message = await generate_results_embed(self.bot, event_id, event_results, competition_id, "1")
+            embed = Embed(title=f"{event_name} Results", description=message, color=0xffa500)
+
+            message_chunks = []
+            current_chunk = ""
+            for line in message.splitlines():
+                if len(current_chunk + line) > 2000:
+                    message_chunks.append(current_chunk)
+                    current_chunk = ""
+                current_chunk += line + "\n"
+            message_chunks.append(current_chunk)
+
+            for i, message in enumerate(message_chunks):
+                if i == 0:
+                    await interaction.channel.send(f"**{event_name} Results**")
+
+                await interaction.channel.send(f"```{message}```")
+        else:
+            await interaction.channel.send(f"The results for this {event_name} are not available yet")
+
+    except IndexError:
+        await interaction.channel.send(f"The results for this {event_name} are not available yet")
 
 
 class ResultSelectorView(nextcord.ui.View):
@@ -92,49 +136,36 @@ class ResultSelectorView(nextcord.ui.View):
         events_data_list["name"], events_data_list["event_id"])]
 
     @nextcord.ui.select(
-        placeholder="Select an option", options=options, custom_id="ResultSelectorView:dropdown"
+        placeholder="Select an event", options=options, custom_id="ResultSelectorView:event_dropdown"
     )
-    async def dropdown(self, select: nextcord.ui.Select, interaction: nextcord.Interaction):
-        await interaction.response.defer()
+    async def event_dropdown(self, select: nextcord.ui.Select, interaction: nextcord.Interaction):
+        
+
+        # Prompt the user to select a round
+        round_options = [
+            nextcord.SelectOption(label="First round", value="1"),
+            nextcord.SelectOption(label="Second round", value="2"),
+            nextcord.SelectOption(label="Finals", value="f"),
+        ]
+        round_select = nextcord.ui.Select(placeholder="Select a round", options=round_options)
+        round_view = nextcord.ui.View()
+        round_view.add_item(round_select)
 
         # Get the selected option's label and value
         event_name, event_id = interaction.data['values'][0].split(",")
 
-        competition_id = competitions[competitions["active_day"] != 0].iloc[0]["competition_id"]
+        # Get the selected option's value
+        round_type = select.values[0]
+        print(round_type)
 
-        round_num = "f"
-
-        try:
-            event_results = results[(results['competition_id'].astype(str) == str(competition_id)) & 
-                                    (results['event_id'].astype(str) == str(event_id)) & 
-                                    (results['round_type'].astype(str) == str(round_num))]
-                
-            if not event_results.empty:
-                message = await generate_results_embed(self.bot, event_name, event_results)
-                embed = Embed(title=f"{event_name} Results", description=message, color=0xffa500)
+        # Pass event_id and event_name as arguments to the round_dropdown callback
+        round_select.callback = lambda select, event_name=event_name, event_id=event_id, round_type=round_type: round_dropdown(self, interaction, event_name, event_id, round_type)
 
 
-                message_chunks = []
-                current_chunk = ""
-                for line in message.splitlines():
-                    if len(current_chunk + line) > 2000:
-                        message_chunks.append(current_chunk)
-                        current_chunk = ""
-                    current_chunk += line + "\n"
-                message_chunks.append(current_chunk)
 
-                for i, message in enumerate(message_chunks):
-                    if i == 0:
-                        await interaction.channel.send(f"**{event_name} Results**")
+        await interaction.response.send_message("Please select a round:", view=round_view, ephemeral=True)
 
-                    await interaction.channel.send(f"```{message}```")
-            else:
-                await interaction.response.send_message(f"The results for this {event_name} are not available yet", ephemeral=True)
-
-        except IndexError:
-            await interaction.response.send_message(f"The results for this {event_name} are not available yet", ephemeral=True)
-
-
+    
 def init_results_selector(bot):
     @bot.slash_command(name="results-selector", description="Creates a private thread for the user who clicks the button in the dropdown")
     async def results_selector(ctx):
