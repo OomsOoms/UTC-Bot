@@ -5,7 +5,7 @@ import pandas as pd
 from .event_selector import EventSelectorView
 
 def init_day_selector(bot):
-    @bot.slash_command(name="day-selector", description="Creates a private thread for the user who clicks the button in the dropdown")
+    @bot.slash_command(name="day-selector", description="Creates a private thread for the user who clicks the button in the dropdown", guild_ids=[988085977719402536, 1090802718211321896])
     async def day_selector(ctx, day_number: int = SlashOption(choices={1:1, 2:2, 3:3, 4:4, 5:5, 6:6})):
 
         # Read the competitions file
@@ -19,7 +19,7 @@ def init_day_selector(bot):
         competitions.to_csv("data/Competitions.tsv", sep='\t', index=False)
 
         # Send a response message
-        await ctx.send(f"Active day has been changed to {day_number}", ephemeral=True)
+        await ctx.send(f"Active day has been changed to {day_number}, use the `push_change` command then use the `event_selector` command to see this.", ephemeral=True)
 
         #messages = pd.read_csv('data/Messages.tsv', sep='\t')
         #for index, row in messages.iterrows():

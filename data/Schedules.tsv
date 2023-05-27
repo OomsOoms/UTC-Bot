@@ -18,12 +18,12 @@ DCC	sq1	2	1	8
 DCC	666	2	f	3
 
 DCC	pyram	3	1	12
-DCC	222	3	2	16
 DCC	skewb	3	1	12
 DCC	333bf	3	1	8
 DCC	555bf	3	f	3
 DCC	444	3	1	12
 
+DCC	222	4	2	16
 DCC	333	4	2	16
 DCC	clock	4	f	3
 DCC	minx	4	f	3

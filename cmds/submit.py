@@ -330,5 +330,6 @@ If you get DNF, input "DNF" without the quotes in the time submission field.""")
 
                 # Send the file as an attachment
                 await thread.send(file=file, view=SubmitModalView())
+
         else:
             await thread.send(f"**Scramble {thread_object.scramble_num}:**\n{scramble}", view=SubmitModalView())
