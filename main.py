@@ -1,8 +1,6 @@
 import nextcord
 from nextcord.ext import commands
 import cmds.__init__ as __init__
-import subprocess
-import sys
 
 class Bot(commands.Bot):
     def __init__(self, *args, **kwargs):
@@ -26,14 +24,6 @@ bot = Bot(intents=intents)
 
 __init__.cmds(bot)
 
-@bot.slash_command(name="push-change", description="Updates all event selectors from this point, only if day selector used", guild_ids=[988085977719402536, 1090802718211321896])
-async def push_change(ctx):
-    
-    await ctx.send("Restarting...")
-        # Launch a new instance of the main.py file as a separate process
-    subprocess.Popen(["python3", "main.py"]).communicate()
-    # Exit the current process
-    sys.exit()
 
 @bot.slash_command(name='ping', description="Play ping pong with the bot's latency")
 async def ping(ctx):
