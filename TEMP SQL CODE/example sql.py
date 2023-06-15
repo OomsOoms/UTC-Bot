@@ -45,4 +45,29 @@ conn.commit()
 # Close the connection
 conn.close()
 
+import sqlite3
+
+# Connect to the SQLite database
+conn = sqlite3.connect('your_database.db')
+cursor = conn.cursor()
+
+# Create the first table
+cursor.execute('''CREATE TABLE Table1 (
+                    id INTEGER PRIMARY KEY,
+                    other_column TEXT
+                )''')
+
+# Create the second table with a foreign key reference
+cursor.execute('''CREATE TABLE Table2 (
+                    id INTEGER PRIMARY KEY,
+                    table1_id INTEGER,
+                    other_column TEXT,
+                    FOREIGN KEY (table1_id) REFERENCES Table1(id)
+                )''')
+
+# Commit the changes and close the connection
+conn.commit()
+conn.close()
+
+
 
