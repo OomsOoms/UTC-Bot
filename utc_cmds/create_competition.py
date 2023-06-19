@@ -37,6 +37,6 @@ class Competition:
 
             # Insert the serialized object into the database
             serialized_data = pickle.dumps(self)
-            print(serialized_data)
             cursor.execute("INSERT INTO competitions (competition_id, serialized_data) VALUES (?, ?)", (self.competition_id, serialized_data))
             conn.commit()
+

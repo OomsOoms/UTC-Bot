@@ -149,11 +149,7 @@ class SubmitButton(nextcord.ui.View):
 
 async def submit(interaction, thread):
 
-    embed = nextcord.Embed(title=f"Infomation", description="""Below you will find a scramble for a the event you selected. Once you've solved it, click the "SUBMIT" button below the scramble to input your time. A text input field will then prompt you to enter your time in the appropriate format. If you receive a plus 2 write your original time +2. For example, if your final time is 4.25 seconds and you receive a plus 2, input 4.25+2 as your time.
-
-After submitting your time, the next scramble will automatically appear. Once you've completed the entire average, click the green "SUBMIT" button to submit your average time.
-
-If you get DNF, input "DNF" without the quotes in the time submission field.""")
+    embed = nextcord.Embed(title="Info", description="""Follow WCA competitions as closely as possible. Use the appropriate inspection time for the event and a stackmat if possible\n- Follow the scramble\n- Submit the time\n-The next scramble will be revealed\nSyntax""")
         
     await thread.send(f"<@{interaction.user.id}>", embed=embed)
 

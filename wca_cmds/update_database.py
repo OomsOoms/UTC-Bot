@@ -1,6 +1,5 @@
 import sqlite3
 import requests
-from datetime import datetime
 import zipfile
 import json
 import os
@@ -11,7 +10,10 @@ from dateutil import parser
 
 def create_database():
     # Establish a connection to the database
-    os.remove('data/wca_database.db')
+    try:
+        os.remove('data/wca_database.db')
+    except:
+        pass
     conn = sqlite3.connect('data/wca_database.db')
 
     # Create a cursor

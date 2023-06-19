@@ -6,9 +6,10 @@ from .submit import submit
 from .create_competition import Competition
 
 
+
 def update_dropdown():
     # Create the select menu options
-    options = [nextcord.SelectOption(label="event_name", value="Test0623013:eventId,Event name")]
+    options = [nextcord.SelectOption(label="event_name", value="TestCompetition062301:eventId,Event name")]
 
     return options
 
@@ -40,16 +41,17 @@ class EventSelectorView(nextcord.ui.View):
             result = cursor.fetchone()
 
         if result:
-            # Get and deserialized the competition object frpm column 2
+            # Get and deserialized the competition object from column 2
+            deserialized_object = pickle.loads(b'\x80\x04\x95\xe8\x00\x00\x00\x00\x00\x00\x00\x8c\x08__main__\x94\x8c\x0bCompetition\x94\x93\x94)\x81\x94}\x94(\x8c\x10competition_name\x94\x8c\x0cfuckyouerrir\x94\x8c\x0bcompetitors\x94]\x94\x8c\x08settings\x94}\x94(\x8c\nhost_users\x94]\x94\x8c\x0cround_length\x94K\x00\x8c\x0clive_results\x94\x89\x8c\x0evideo_evidence\x94\x89\x8c\nstart_date\x94K\x00\x8c\x06guilds\x94]\x94u\x8c\x0ecompetition_id\x94\x8c\x13Fuckyouerrir0623013\x94ub.')
+            print(deserialized_object)
             deserialized_object = pickle.loads(result[1])
-
             print(deserialized_object)
 
-        # Create a new thread in the channel
-        thread = await interaction.channel.create_thread(name=event_name, auto_archive_duration=None, type=nextcord.ChannelType.private_thread)
+            # Create a new thread in the channel
+            thread = await interaction.channel.create_thread(name=event_name, auto_archive_duration=None, type=nextcord.ChannelType.private_thread)
 
-        await thread.add_user(interaction.user)
-        await submit(interaction=interaction, thread=thread)
+            await thread.add_user(interaction.user)
+            await submit(interaction=interaction, thread=thread)
 
     
 def init_event_selector(bot):

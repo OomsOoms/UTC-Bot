@@ -1,6 +1,8 @@
 import nextcord
 from nextcord.ext import commands
 import utc_cmds.__init__ as __init__
+from dotenv import load_dotenv
+import os
 
 class Bot(commands.Bot):
     def __init__(self, *args, **kwargs):
@@ -32,7 +34,5 @@ async def ping(ctx):
     # Send a message to the user showing the bot's latency
     await ctx.send(f'Pong! Latency: {latency}ms')
 
-
-# Start the bot by running its event loop with the specified token
-#bot.run('MTAyODA2ODkzODQ3NjY5NTU5Mw.GPAZGw.4aDYd3uqPKPDCxKfDi2QGqHIxsyTSqFI75sa4s') # test
-bot.run('OTgyNjEzMTY1MTk4MTU1ODg2.GAUbse.1DFkB-aCATjlLJDyc_SXtgxYOkBlRFcsTawzKs') # main
+load_dotenv() # Envoriment variables
+bot.run(os.getenv("TEST_BOT_TOKEN"))
