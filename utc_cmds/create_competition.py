@@ -9,7 +9,9 @@ class Competition:
 
         self.competition_name = competition_name
 
-        self.competitors = [] # List of competitor objects specific to each competition
+        self.password = "UTC123" # Default placeholder
+
+        self.competitors = {} # User ID:competitor object
 
         self.settings = {"host_users":[], "round_length":0, "live_results":False, "video_evidence":False, "start_date":0, "guilds":[]}
 
@@ -40,3 +42,29 @@ class Competition:
             cursor.execute("INSERT INTO competitions (competition_id, serialized_data) VALUES (?, ?)", (self.competition_id, serialized_data))
             conn.commit()
 
+
+import sqlite3
+
+def reset_table(table_name):
+    # Connect to the SQLite database
+    conn = sqlite3.connect('data/utc_database.db')
+    cursor = conn.cursor()
+    
+    try:
+        # Delete all rows from the table
+        cursor.execute(f"DELETE FROM {table_name}")
+        
+        # Commit the changes
+        conn.commit()
+        print(f"All rows from '{table_name}' have been deleted successfully.")
+        
+    except sqlite3.Error as e:
+        print(f"Error occurred: {e}")
+        
+    finally:
+        # Close the cursor and the database connection
+        cursor.close()
+        conn.close()
+
+#reset_table("competitions")
+#Competition("Test").write()

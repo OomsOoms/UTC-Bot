@@ -3,6 +3,7 @@ from nextcord.ext import commands
 import utc_cmds.__init__ as __init__
 from dotenv import load_dotenv
 import os
+from utc_cmds.create_competition import Competition
 
 class Bot(commands.Bot):
     def __init__(self, *args, **kwargs):
@@ -18,14 +19,12 @@ class Bot(commands.Bot):
 
         print(f"Logged in as {self.user} (ID: {self.user.id})")
 
-
 intents = nextcord.Intents.default()
 intents.messages = True
 
 bot = Bot(intents=intents)
 
 __init__.cmds(bot)
-
 
 @bot.slash_command(name='ping', description="Play ping pong with the bot's latency")
 async def ping(ctx):

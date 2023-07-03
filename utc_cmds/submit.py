@@ -106,7 +106,7 @@ class ConfirmModalView(nextcord.ui.View):
             
             await asyncio.sleep(1)
 
-            thread_object = get_thread_object(thread=thread, increment=False)
+            thread_object = ""#get_thread_object(thread=thread, increment=False)
 
             best = min([result for result in thread_object.results if result != -1])
 
@@ -138,86 +138,17 @@ class SubmitButton(nextcord.ui.View):
         label="Submit", style=nextcord.ButtonStyle.primary, custom_id="ResultSelectorView:submit"
     )
     async def submit(self, button: nextcord.ui.Button, interaction: nextcord.Interaction):
-        thread = interaction.channel
-        thread_object = get_thread_object(thread=thread, increment=False)
+        pass
 
-        if interaction.user.id == get_thread_object(thread=thread, increment=False).user_id:
-            await interaction.response.send_modal(EmbedModal(thread_object))
+    
+async def submit(interaction, thread, competition_object):
 
-        else:
-            await interaction.send("This is not your thread!", ephemeral=True)
-
-async def submit(interaction, thread):
-
-    embed = nextcord.Embed(title="Info", description="""Follow WCA competitions as closely as possible. Use the appropriate inspection time for the event and a stackmat if possible\n- Follow the scramble\n- Submit the time\n-The next scramble will be revealed\nSyntax""")
+    embed = nextcord.Embed(title="Info", description="""Follow WCA competitions as closely as possible. Use the appropriate inspection time for the event and a stackmat if possible\n
+    - Follow the scramble\n
+    - Submit the time\n
+    - The next scramble will be revealed\n
+    Syntax""")
         
     await thread.send(f"<@{interaction.user.id}>", embed=embed)
 
-
-    if thread_object.scramble_num > thread_object.solve_count:
-
-        print(thread_object.results)
-        if thread_object.event_id != "333mbf":
-            thread_object.results = [int(x) for x in thread_object.results]
-            max_val = max(thread_object.results)
-            fuckinghelpme = sorted([max_val+1 if t == -1 else t for t in thread_object.results])
-
-            trimmed_times = fuckinghelpme[max(0, thread_object.trim[0]):min(thread_object.solve_count, thread_object.solve_count - thread_object.trim[1])]
-        
-        else:
-            trimmed_times = thread_object.results
-
-        count_minus_ones = thread_object.results.count(-1)
-
-        if count_minus_ones > thread_object.trim[1]:
-            thread_object.average = -1
-            average = "DNF"
-        else:
-            if thread_object.event_id == "333mbf":
-                average = "N/A"
-
-            else:
-                print(trimmed_times)
-                trimmed_times = [int(time) for time in trimmed_times]
-                mean = sum(trimmed_times) // len(trimmed_times) if len(trimmed_times) > 0 else 0
-    
-                thread_object.average = str(mean)
-
-
-                average = f"{thread_object.average[:-2]}.{thread_object.average[-2:]}" if thread_object.average != -1 else "DNF"
-
-        formatted_results = ["DNF" if solve == -1 else f"{str(solve)[:-2]}.{str(solve)[-2:]}" for solve in thread_object.results]
-
-        if thread_object.round_type == 1:
-            round = "First Round"
-        elif thread_object.round_type == 2:
-            round = "First Round"
-        else:
-            round = "Final"
-
-        embed = nextcord.Embed(title=f"{round} round")
-        embed.add_field(name="Solves", value = "\n".join(str(solve) for solve in formatted_results))
-        embed.add_field(name="Average", value=str(average))
-        await thread.send(embed=embed, view=ConfirmModalView())
-
-    else:
-        #print(thread_object.competition_id, "comp")
-        #print(thread_object.event_id, "event")
-        #print(thread_object.scramble_num, "scram")
-        #print(thread_object.round_type, "round")
-        #print(scrambles_df)
-        scramble = scrambles_df.loc[(scrambles_df['competition_id'].astype(str) == str(thread_object.competition_id)) &
-                                (scrambles_df['event_id'].astype(str) == str(thread_object.event_id)) &
-                                (scrambles_df['scramble_num'].astype(str) == str(thread_object.scramble_num)) &
-                                (scrambles_df['round_type'].astype(str) == str(thread_object.round_type))].iloc[0]['scramble']
-        
-        if event_id == "333mbf":
-            with open('333mbf scrambles.txt', 'rb') as file:
-                # Create a File object with the file
-                file = nextcord.File(file)
-
-                # Send the file as an attachment
-                await thread.send(file=file, view=SubmitButton())
-
-        else:
-            await thread.send(f"**Scramble {thread_object.scramble_num}:**\n{scramble}", view=SubmitButton())
+    await thread.send("Scramble", view=SubmitButton())
