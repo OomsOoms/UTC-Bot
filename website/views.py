@@ -12,7 +12,7 @@ BOT_TOKEN = os.getenv("TEST_BOT_TOKEN")
 def send_message():
 
     response = requests.post(
-        f"https://discord.com/api/v9/channels/1125480273144971285/messages",
+        f"https://discord.com/api/v9/channels/1125592899908817038/messages",
         headers={"Authorization": f"Bot {BOT_TOKEN}"},
         json={"content": "Hello from the website!"}
     )

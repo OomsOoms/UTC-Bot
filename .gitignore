@@ -160,6 +160,4 @@ cython_debug/
 #.idea/
 
 # Databases
-utc_database.db
-wca_database.db
-data/WCA_export.tsv/*
+data/**
