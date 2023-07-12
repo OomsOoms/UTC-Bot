@@ -20,7 +20,6 @@ def index():
 
     return render_template('index.html', tables=tables)
 
-
 @app.route('/table_data', methods=['POST'])
 def table_data():
     table_name = request.form['table_name']

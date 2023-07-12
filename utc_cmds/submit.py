@@ -54,10 +54,11 @@ async def submit(thread):
 
     solve_count = cursor.fetchone()[0]
 
-    if not solve_count < user_event[5]: # solve_num
+    if not solve_count <= user_event[5]: # solve_num
+        cursor.execute("UPDATE threads SET solve_num = solve_num + 1 WHERE thread_id = ?", (thread.id,))
+
         await thread.send("Scramble", view=SubmitButton())
 
-        cursor.execute("UPDATE threads SET solve_num = solve_num + 1 WHERE thread_id = ?", (thread.id,))
         conn.commit()
 
     cursor.close()

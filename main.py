@@ -3,6 +3,9 @@ from nextcord.ext import commands
 import utc_cmds.__init__ as __init__
 from dotenv import load_dotenv
 import os
+import sqlite3
+
+conn = sqlite3.connect("data/utc_database.db") # need to try and import this into other files
 
 class Bot(commands.Bot):
     def __init__(self, *args, **kwargs):

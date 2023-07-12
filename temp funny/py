@@ -1,0 +1,8 @@
+import requests 
+# Set the authorization header with the bot token
+headers = {
+    "Authorization": "Bot MTAyODA2ODkzODQ3NjY5NTU5Mw.G-dQyT.1DqRJNoE1c4qdpfaQgE-QlmaaWWJLSaIRTMuys"
+}
+
+
+response = requests.post("https://discord.com/api/v9/channels/1125480273144971285/typing", headers=headers)

@@ -1,5 +1,4 @@
 import sqlite3
-import pickle
 import nextcord
 from nextcord import Embed
 from .submit import submit
@@ -42,7 +41,7 @@ class EventSelectorView(nextcord.ui.View):
             thread = await interaction.channel.create_thread(name=event_name, reason=f"{interaction.user} {event_id} submit thread", auto_archive_duration=None, type=nextcord.ChannelType.private_thread)
 
             cursor = conn.cursor()
-            cursor.execute("INSERT INTO threads (thread_id, user_id, event_id, competition_id, solve_num, round_type) VALUES (?, ?, ?, ?, 1, ?)",
+            cursor.execute("INSERT INTO threads (thread_id, user_id, event_id, competition_id, solve_num, round_type) VALUES (?, ?, ?, ?, 0, ?)",
                             (thread.id, interaction.user.id, event_id, competition_id, round_type))
             conn.commit()
 
