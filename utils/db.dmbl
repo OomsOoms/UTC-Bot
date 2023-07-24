@@ -1,6 +1,8 @@
 Table competitions {
   competition_id integer [primary key]
   competition_name varchar
+  organisers varchar
+  embed_info varchar
 }
 
 Table scrambles {

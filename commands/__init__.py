@@ -1,12 +1,12 @@
-# Init file for all commands
-
 # Import the commands and their views
-from .event_selector import init_event_selector, EventSelectorView
+from .event_selector import event_dropdown, EventSelectorView
+from .find_user_results import find_results
 from .submit import SubmitButton
 
 def cmds(bot):
     # Add the commands to the bot
-    init_event_selector(bot)
+    event_dropdown(bot)
+    find_results(bot)
 
 def views(bot):
     # Add the views to the bot

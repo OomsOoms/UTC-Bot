@@ -2,7 +2,7 @@ from nextcord.ui.view import View
 import nextcord
 import sqlite3
 
-conn = sqlite3.connect('data/utc_database.db')
+from utils.database import conn
 
 class SubmitModal(nextcord.ui.Modal):
 
