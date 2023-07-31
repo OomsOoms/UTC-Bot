@@ -17,8 +17,7 @@ cursor.execute('''
     CREATE TABLE competitions (
         competition_id TEXT PRIMARY KEY,
         competition_name TEXT,
-        organisers_id TEXT,
-        embed_info TEXT
+        extra_info TEXT
     )
 ''')
 
@@ -32,15 +31,15 @@ cursor.execute('''
     )
 ''')
 
-# Create scrambles table
+# Create scrambles table with composite primary key
 cursor.execute('''
     CREATE TABLE scrambles (
-        scramble_id INTEGER PRIMARY KEY,
         competition_id INTEGER,
         event_id TEXT,
         round_type TEXT,
         scramble_num INTEGER,
         scramble TEXT,
+        PRIMARY KEY (competition_id, event_id, round_type, scramble_num),
         FOREIGN KEY (competition_id) REFERENCES competitions(competition_id),
         FOREIGN KEY (event_id) REFERENCES events(event_id)
     )
@@ -102,20 +101,29 @@ cursor.execute('''
         user_id INTEGER,
         round_type TEXT,
         solve_num INTEGER,
+        value_1 INTEGER,
+        value_2 INTEGER,
+        value_3 INTEGER,
+        value_4 INTEGER,
+        value_5 INTEGER,
         FOREIGN KEY (event_id) REFERENCES events(event_id),
         FOREIGN KEY (competition_id) REFERENCES competitions(competition_id)
     )
 ''')
 
-cursor.execute("INSERT INTO competitions (competition_id, competition_name, organisers_id, embed_info) VALUES (?, ?, ?, ?)", (123, 123, 760616986568163348, "competition info from db"))
-cursor.execute("INSERT INTO competitions (competition_id, competition_name, organisers_id, embed_info) VALUES (?, ?, ?, ?)", (456, 456, 760616986568163348, "competition info from db 2"))
+cursor.execute("INSERT INTO competitions (competition_id, competition_name, extra_info) VALUES (?, ?, ?)", ("123", "Competition Name", "**Film your solves with the screen in view if you think you may win**"))
+cursor.execute("INSERT INTO competitions (competition_id, competition_name) VALUES (?, ?)", ("456", "Competition 2 Name"))
 cursor.execute("INSERT INTO events (event_id, event_name, format, average_id) VALUES (?, ?, ?, ?)", ("333", "3x3 Cube", "time", "a"))
 cursor.execute("INSERT INTO events (event_id, event_name, format, average_id) VALUES (?, ?, ?, ?)", ("222", "2x2 Cube", "time", "a"))
 cursor.execute("INSERT INTO competition_events (competition_id, event_id) VALUES (?, ?)", (123, "333"))
 cursor.execute("INSERT INTO competition_events (competition_id, event_id) VALUES (?, ?)", (123, "222"))
 cursor.execute("INSERT INTO formats (average_id, average_name, sort_by, sort_by_second, solve_count, trim_fastest_n, trim_slowest_n) VALUES (?, ?, ?, ?, ?, ?, ?)", ("a", "Average of 5", "average", "single", 5, 1, 1))
-cursor.execute("INSERT INTO results (result_id, competition_id, event_id, user_id, guild_id, average_id, round_type_id, pos, average, value_1, value_2, value_3, value_4, value_5) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-                (1, "123", 333, 760616986568163348, 988085977719402536, "a", "1", 1, 1234, 1234, 1234, 1234, 1234, 1234))
+
+cursor.execute("INSERT INTO scrambles (competition_id, event_id, round_type, scramble_num, scramble) VALUES (?, ?, ?, ?, ?)", ("123", "333", "f", 1, "SCRAMBLE 1 FROM DB"))
+cursor.execute("INSERT INTO scrambles (competition_id, event_id, round_type, scramble_num, scramble) VALUES (?, ?, ?, ?, ?)", ("123", "333", "f", 2, "SCRAMBLE 2 FROM DB"))
+cursor.execute("INSERT INTO scrambles (competition_id, event_id, round_type, scramble_num, scramble) VALUES (?, ?, ?, ?, ?)", ("123", "333", "f", 3, "SCRAMBLE 3 FROM DB"))
+cursor.execute("INSERT INTO scrambles (competition_id, event_id, round_type, scramble_num, scramble) VALUES (?, ?, ?, ?, ?)", ("123", "333", "f", 4, "SCRAMBLE 4 FROM DB"))
+cursor.execute("INSERT INTO scrambles (competition_id, event_id, round_type, scramble_num, scramble) VALUES (?, ?, ?, ?, ?)", ("123", "333", "f", 5, "SCRAMBLE 5 FROM DB"))
 
 # Commit the changes and close the connection
 conn.commit()
