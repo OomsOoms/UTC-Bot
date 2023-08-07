@@ -1,8 +1,25 @@
 from nextcord.ui.view import View
 import nextcord
 import re
+import os
+import requests
 
 from utils.database import execute_query
+
+# TODO: Need to remove and None values, need to check the average type before formatting, for events like fmc and mbld, same goes for the submit code where the format should be checked plus anything with a leading 0 gets removed, for example: 6 => 0.06 instead its doing 0.6
+# TODO: As this is used in multiple files it should be on its own file, possibly in utils
+def format_time(input_time): 
+    input_str = str(input_time)
+    if input_time < 100:
+        return '0.' + input_str
+    elif input_time < 6000:
+        return input_str[:-2] + '.' + input_str[-2:]
+    else:
+        minutes = input_time // 6000
+        remaining = input_time % 6000
+        seconds = remaining // 100
+        milliseconds = remaining % 100
+        return f"{minutes}:{str(seconds).zfill(2)}.{str(milliseconds).zfill(2)}"
 
 
 def parse_time(time_str):
@@ -84,27 +101,37 @@ class SubmitAverageButton(nextcord.ui.View):
 
         view = View()
         submitted_button = nextcord.ui.Button(label="Submitted", style=nextcord.ButtonStyle.success, disabled=True)
-        submitted_button = nextcord.ui.Button(label="Request assistance", style=nextcord.ButtonStyle.primary, disabled=True)
+        request_assistance_button = nextcord.ui.Button(label="Request assistance", style=nextcord.ButtonStyle.primary, disabled=True)
         view.add_item(submitted_button)
+        view.add_item(request_assistance_button)
 
         await interaction.message.edit(view=view)
-        await interaction.channel.send("**You can now leave this thread**")
 
         execute_query("DELETE_thread_data", (interaction.channel.id,))
 
+        # use requests and ani API endpoint to remove the user cuz idk how else to do this
+        
+        # Construct the API endpoint URL
+        api_url = f"https://discord.com/api/v9/channels/{interaction.channel.id}/thread-members/{interaction.user.id}"
+
+        # Set the headers including the Authorization token
+        headers = {"Authorization": f"Bot {os.getenv('BOT_TOKEN')}"}
+
+        # Send a DELETE request to remove the user from the thread
+        requests.delete(api_url, headers=headers)
 
     @nextcord.ui.button(
         label="Request assistance", style=nextcord.ButtonStyle.primary, custom_id="RequestAssistanceButton:request", disabled=True
     )
     async def request_assistance(self, button: nextcord.ui.Button, interaction: nextcord.Interaction):
-        pass
-    
+        pass # TODO: Make this send a message with a channel link to a mod channel
 
+# TODO: If the video evidence is true for the event add info for that
 async def submit(thread):
     competition_id, event_id, user_id, round_type, solve_num = execute_query("SELECT_thread_info", (thread.id,)).fetchone()
     solve_count, trim_average_num = execute_query("SELECT_solve_count_trim", (competition_id, user_id)).fetchone()
 
-    if not solve_count <= solve_num: # solve_num
+    if not solve_count <= solve_num:
         execute_query("UPDATE_thread_solve_num", (thread.id,))
         scramble = execute_query("SELECT_scramble", (competition_id, event_id, solve_num+1, round_type)).fetchone()
 
@@ -118,19 +145,21 @@ async def submit(thread):
 
         times_list = [value for value in times_list if value is not None] # Remove any None values if the average contains less than 5 values
         trimmed_times = sorted(times_list)[:len(times_list)-trim_average_num][trim_average_num:]
-        average = str(round(sum(trimmed_times)/len(trimmed_times)))
+        average = round(sum(trimmed_times)/len(trimmed_times))
         
-        formatted_times = ["{:.2f}".format(time / 100) for time in times_list]
-        fastest_indices = sorted(range(len(formatted_times)), key=lambda i: float(formatted_times[i]))[:trim_average_num]
-        slowest_indices = sorted(range(len(formatted_times)), key=lambda i: float(formatted_times[i]), reverse=True)[:trim_average_num]
+        formatted_times = [format_time(time) for time in times_list]
+        fastest_indices = sorted(range(len(times_list)), key=lambda i: float(times_list[i]))[:trim_average_num]
+        slowest_indices = sorted(range(len(times_list)), key=lambda i: float(times_list[i]), reverse=True)[:trim_average_num]
 
         for index in fastest_indices + slowest_indices:
             formatted_times[index] = f"({formatted_times[index]})"
 
         result_string = " ".join(formatted_times)
 
-        embed = nextcord.Embed(title=f"Your {event_id} Results", color=0xffa500)
-        embed.add_field(name="Average", value=average, inline=False)
+        event_name = execute_query("SELECT_event_name", (event_id,)).fetchone()[0]
+
+        embed = nextcord.Embed(title=f"Your {event_name} Results", color=0xffa500)
+        embed.add_field(name="Average", value=format_time(average), inline=False)
         embed.add_field(name="Times", value=result_string, inline=False)
 
         await thread.send(embed=embed, view=SubmitAverageButton())

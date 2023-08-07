@@ -24,7 +24,7 @@ class Bot(commands.Bot):
 
         print(f"Logged in as {self.user} (ID: {self.user.id})")
 
-        #await cmds.scrape_records()
+        #await cmds.scrape_records() # TODO: Make it send records every 10 minutes after checking they have not already been sentj
 
 bot = Bot(intents=intents) 
 
@@ -35,4 +35,4 @@ async def ping(ctx):
     latency = round(bot.latency * 1000)
     await ctx.send(f'Pong! Latency: {latency}ms')
 
-bot.run(os.getenv("MAIN_BOT_TOKEN"))
+bot.run(os.getenv("BOT_TOKEN"))

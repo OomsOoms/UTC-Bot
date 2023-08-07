@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>UTC Database Viewer</title>
+    <link rel="stylesheet" type="text/css" href="/static/styles.css">
+</head>
+<body>
+    <h1>UTC Database Viewer</h1>
+    <ul class="button-list"> <!-- Added the class attribute here -->
+        {% for table in tables %}
+            <li><a class="button" href="/table/{{ table[0] }}">{{ table[0] }}</a></li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

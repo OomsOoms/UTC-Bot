@@ -1,15 +1,17 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>UTC Database Viewer</title>
-    <link rel="stylesheet" type="text/css" href="/static/styles.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
 </head>
 <body>
-    <h1>UTC Database Viewer</h1>
-    <ul class="button-list"> <!-- Added the class attribute here -->
-        {% for table in tables %}
-            <li><a class="button" href="/table/{{ table[0] }}">{{ table[0] }}</a></li>
-        {% endfor %}
-    </ul>
+    <a href="/tables">Tables</a>
+
+    {% if session.get('access_token') %}
+        <a href="/profile">Profile</a>
+    {% else %}
+        <a href="/login">Login</a>
+    {% endif %}
 </body>
 </html>

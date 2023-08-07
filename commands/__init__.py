@@ -16,4 +16,4 @@ def views(bot):
     bot.add_view(EventSelectorView())
     bot.add_view(SubmitSolveButton())
     bot.add_view(SubmitAverageButton())
-    bot.add_view(ResultEventSelector())
+    bot.add_view(ResultEventSelector(bot))

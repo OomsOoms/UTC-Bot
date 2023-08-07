@@ -17,7 +17,8 @@ cursor.execute('''
     CREATE TABLE competitions (
         competition_id TEXT PRIMARY KEY,
         competition_name TEXT,
-        extra_info TEXT
+        extra_info TEXT,
+        admin_users INTEGER
     )
 ''')
 
@@ -26,6 +27,7 @@ cursor.execute('''
     CREATE TABLE competition_events (
         competition_id TEXT,
         event_id TEXT,
+        video_evidence BOOLEAN,
         FOREIGN KEY (event_id) REFERENCES events(event_id)
         FOREIGN KEY (competition_id) REFERENCES competitions(competition_id)
     )
@@ -79,7 +81,6 @@ cursor.execute('''
         guild_id INTEGER,
         average_id TEXT,
         round_type_id TEXT,
-        pos INTEGER,
         average INTEGER,
         value_1 INTERGER,
         value_2 INTEGER,
@@ -111,7 +112,7 @@ cursor.execute('''
     )
 ''')
 
-cursor.execute("INSERT INTO competitions (competition_id, competition_name, extra_info) VALUES (?, ?, ?)", ("123", "Competition Name", "**Film your solves with the screen in view if you think you may win**"))
+cursor.execute("INSERT INTO competitions (competition_id, competition_name, extra_info, admin_users) VALUES (?, ?, ?, ?)", ("123", "Competition Name","", 760616986568163348))
 cursor.execute("INSERT INTO competitions (competition_id, competition_name) VALUES (?, ?)", ("456", "Competition 2 Name"))
 cursor.execute("INSERT INTO events (event_id, event_name, format, average_id) VALUES (?, ?, ?, ?)", ("333", "3x3 Cube", "time", "a"))
 cursor.execute("INSERT INTO events (event_id, event_name, format, average_id) VALUES (?, ?, ?, ?)", ("222", "2x2 Cube", "time", "a"))

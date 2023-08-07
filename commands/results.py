@@ -1,10 +1,10 @@
 import nextcord
-from nextcord import SlashOption
 
 from utils.database import execute_query
 from .event_selector import generate_options
+from .submit import format_time
 
-def generate_results_embed(event_results):
+async def generate_results_embed(bot, event_results):
 
     num_highlight = 3  # Replace this with the number of rows you want to highlight
 
@@ -14,20 +14,21 @@ def generate_results_embed(event_results):
     max_value_width = 8
 
     # Define the column headers with left alignment
-    header_row = f"{'Rank'.ljust(max_rank_width)} {'User'.ljust(max_user_name_width)} {'1'.rjust(max_value_width)} {'2'.rjust(max_value_width)} {'3'.rjust(max_value_width)} {'4'.rjust(max_value_width)} {'5'.rjust(max_value_width)} {'Average'.rjust(max_value_width)} {'Best'.rjust(max_value_width)}"
+    header_row = f"{'Rank'.ljust(max_rank_width)} {'User'.ljust(max_user_name_width)} {'Time 1'.rjust(max_value_width)} {'Time 2'.rjust(max_value_width)} {'Time 3'.rjust(max_value_width)} {'Time 4'.rjust(max_value_width)} {'Time 5'.rjust(max_value_width)} {'Average Time'.rjust(max_value_width)} {'Best Time'.rjust(max_value_width)}"
 
-    # Truncate user names longer than their respective max width
-    user_names = [str(row[3])[:max_user_name_width] for row in event_results]
-
-    # Add padding to user names to match their respective max width
-    user_names = [name.ljust(max_user_name_width) for name in user_names]
+    # Fetch user names using the bot
+    user_names = []
+    for row in event_results:
+        user = await bot.fetch_user(int(row[3]))
+        user_name = user.name if user else "Unknown User"
+        user_names.append(user_name[:max_user_name_width].ljust(max_user_name_width))
 
     # Define the rows with right alignment for value, average, and best columns
     rows = []
     for index, row in enumerate(event_results):
-        values = [str(row[i]) for i in range(9, 14)]  # Get the "1" to "5" columns (index 9 to 13)
-        average = str(row[8]).rjust(max_value_width)
-        best = str(min(row[9:14])).rjust(max_value_width)  
+        values = [format_time(row[i]) for i in range(9, 14)]  # Format the "1" to "5" columns (index 9 to 13)
+        average = format_time(row[8]).rjust(max_value_width)
+        best = format_time(min(row[9:14])).rjust(max_value_width)
 
         row_text = f"{str(index+1).ljust(max_rank_width)}{user_names[index].ljust(max_user_name_width)} {values[0].rjust(max_value_width)} {values[1].rjust(max_value_width)} {values[2].rjust(max_value_width)} {values[3].rjust(max_value_width)} {values[4].rjust(max_value_width)} {average} {best}"
 
@@ -45,8 +46,9 @@ def generate_results_embed(event_results):
 
 class ResultEventSelector(nextcord.ui.View):
 
-    def __init__(self):
+    def __init__(self, bot):
         super().__init__(timeout=None)
+        self.bot = bot
 
 
     # Method to update the options after the message is sent
@@ -72,7 +74,7 @@ class ResultEventSelector(nextcord.ui.View):
 
         results = execute_query("SELECT_event_results", (competition_id, event_id)).fetchall()
 
-        message = generate_results_embed(results)
+        message = await generate_results_embed(self.bot, results)
 
         message_chunks = []
         current_chunk = ""
@@ -92,8 +94,9 @@ class ResultEventSelector(nextcord.ui.View):
 
 class ResultsCompetitionId(nextcord.ui.Modal):
 
-    def __init__(self):
+    def __init__(self, bot):
         super().__init__("Competition credentials")
+        self.bot = bot
 
         self.competition_id = nextcord.ui.TextInput(
             label="Competition ID", min_length=3, max_length=128, required=True, placeholder="Enter the ID")
@@ -104,7 +107,7 @@ class ResultsCompetitionId(nextcord.ui.Modal):
         competition_data = execute_query("SELECT_competition", (self.competition_id.value,)).fetchone()
 
         if competition_data:
-            view = ResultEventSelector()
+            view = ResultEventSelector(self.bot)
 
             message = await interaction.response.send_message("Select an event to display results for.", view=view, ephemeral=True)
 
@@ -117,10 +120,10 @@ class ResultsCompetitionId(nextcord.ui.Modal):
 
 
 def create_results(bot):
-    @bot.slash_command(name="results", description="Creates a private thread for the user who clicks the button in the dropdown")
+    @bot.slash_command(name="results", description="Sends the results table for the selected event")
     async def results_command(ctx):
         if not ctx.user.guild_permissions.administrator:
             await ctx.response.send_message("You are not authorized to run this command.")
         else:
-            await ctx.response.send_modal(ResultsCompetitionId())
+            await ctx.response.send_modal(ResultsCompetitionId(bot))
             

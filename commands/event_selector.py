@@ -4,8 +4,9 @@ from .submit import submit
 
 from utils.database import conn
 
-
-def generate_options(competition_id): # By default all rounds set to f as there is no round system in place yet these options are written to the threads table when selected
+# By default all rounds set to f as there is no round system in place yet these options are written to the threads table when selected
+# TODO: Add rounds system
+def generate_options(competition_id): 
     cursor = conn.cursor()
 
     cursor.execute("SELECT c.competition_id, c.event_id, e.event_name FROM competition_events c "
@@ -59,7 +60,7 @@ class EventSelectorView(nextcord.ui.View):
                 (interaction.user.id, competition_id, event_id))
         in_results = cursor.fetchone()
 
-        if True: #(not thread_id) and not in_results:  # if not true they havent competed
+        if (not thread_id) and not in_results:  # if not true they havent competed
 
             await interaction.response.defer()
 
@@ -69,8 +70,9 @@ class EventSelectorView(nextcord.ui.View):
             cursor.execute("INSERT INTO threads (thread_id, user_id, event_id, competition_id, solve_num, round_type) VALUES (?, ?, ?, ?, 0, ?)",
                            (thread.id, interaction.user.id, event_id, competition_id, round_type))
             conn.commit()
-
-            embed = nextcord.Embed(title="How to submit your average", color=0xffa500, description="- Follow the scramble and time your solve\n - Try to follow the WCA regulations when solving\n- Click the blue submit button below the scramble\n - Enter the time in the format MM:SS.MS\n- Submit your average! This is automatically caculated by the bot\n - The average will NOT be recorded until you click the green button at the end\n\n**Remember if you think you may win record your cube with your screen in shot**")
+            # TODO: Add the extra info from the db
+            # TODO: If the video evidence is true for the event add info for that
+            embed = nextcord.Embed(title="How to submit your average", color=0xffa500, description="- Follow the scramble and time your solve\n - Try to follow the WCA regulations when solving\n- Click the blue submit button below the scramble\n - Enter the time in the format MM:SS.MS\n- Submit your average! This is automatically caculated by the bot\n - The average will NOT be recorded until you click the green button at the end")
 
             await thread.send(f"<@{interaction.user.id}>", embed=embed)
 

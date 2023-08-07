@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Competition</title>
+</head>
+<body>
+    <p>{{ event_data }}</p>
+    <h1>Create a New Competition</h1>
+    <form id="competitionForm">
+        <label for="competitionName">Competition Name:</label>
+        <input type="text" id="competitionName" name="competitionName" required>
+        <br>
+        <label for="competitionId">Competition ID:</label>
+        <input type="text" id="competitionId" name="competitionId" required>
+        <br>
+        <div id="eventRows">
+            <div class="event-row">
+                <label for="eventName">Event Name:</label>
+                <select name="eventName[]" required onchange="updateScrambleInputs(this)">
+                    {% for event in event_data %}
+                        <option value="{{ event[1] }}">{{ event[0] }}</option>
+                    {% endfor %}
+                </select>
+                <label for="averageId">Average ID:</label>
+                <select name="averageId[]">
+                    <option value="1">Average 1</option>
+                    <option value="2">Average 2</option>
+                </select>
+                <label for="scramble">Scramble:</label>
+
+                <input type="text" name="scramble[]" required>
+                <input type="text" name="scramble[]" required>
+                <input type="text" name="scramble[]" required>
+                <input type="text" name="scramble[]" required>
+                <input type="text" name="scramble[]" required>
+
+                <button type="button" class="remove-event">Remove</button>
+            </div>
+        </div>
+        <button type="button" id="addEvent">Add Event</button>
+        <br>
+        <label for="extraInfo">Extra Info:</label>
+        <textarea id="extraInfo" name="extraInfo" rows="4"></textarea>
+        <br>
+        <button type="submit">Save Competition</button>
+    </form>
+
+    <script>
+        const form = document.getElementById('competitionForm');
+        const addEventButton = document.getElementById('addEvent');
+        const eventRows = document.getElementById('eventRows');
+
+        addEventButton.addEventListener('click', function() {
+            const newEventRow = document.createElement('div');
+            newEventRow.className = 'event-row';
+            newEventRow.innerHTML = `
+            <div id="eventRows">
+            <div class="event-row">
+                <label for="eventName">Event Name:</label>
+                <select name="eventName[]" required onchange="updateScrambleInputs(this)">
+                    {% for event in event_data %}
+                        <option value="{{ event[1] }}">{{ event[0] }}</option>
+                    {% endfor %}
+                </select>
+                <label for="averageId">Average ID:</label>
+                <select name="averageId[]">
+                    <option value="1">Average 1</option>
+                    <option value="2">Average 2</option>
+                </select>
+                <label for="scramble">Scramble:</label>
+
+                <input type="text" name="scramble[]" required>
+                <input type="text" name="scramble[]" required>
+                <input type="text" name="scramble[]" required>
+                <input type="text" name="scramble[]" required>
+                <input type="text" name="scramble[]" required>
+
+                <button type="button" class="remove-event">Remove</button>
+            </div>
+            `;
+            eventRows.appendChild(newEventRow);
+            
+            const removeButtons = newEventRow.getElementsByClassName('remove-event');
+            for (const button of removeButtons) {
+                button.addEventListener('click', function() {
+                    eventRows.removeChild(newEventRow);
+                });
+            }
+        });
+
+        form.addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            // Get form data
+            const formData = new FormData(form);
+
+            // Make an AJAX request to the Flask route
+            fetch('/create_competition', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Handle the response from the server, if needed
+                console.log(data);
+            })
+            .catch(error => {
+                // Handle any errors that occurred
+                console.error(error);
+            });
+        });
+
+        function updateScrambleInputs(selectElement) {
+            const selectedValue = selectElement.value;
+            const scrambleInput = selectElement.nextElementSibling.nextElementSibling;
+            const numScrambles = parseInt(selectedValue[selectedValue.length - 1]);
+            const inputHtml = '<input type="text" name="scramble[]" required>';
+            const newScramblesHtml = inputHtml.repeat(numScrambles);
+            scrambleInput.innerHTML = newScramblesHtml;
+        }
+    </script>
+</body>
+</html>
